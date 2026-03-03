@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+import { APP_DESCRIPTION, APP_TITLE } from "@/lib/constants";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -13,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Inventory & Logistic ERP System",
-  description: "Enterprise Resource Planning (ERP) system designed for inventory management and logistics operations",
+  title: `${APP_TITLE}`,
+  description: `${APP_DESCRIPTION}`,
 };
 
 export default function RootLayout({
