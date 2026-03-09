@@ -1,15 +1,11 @@
 /* =========================================================
-   Inventory & Logistic ERP System – Axios Configuration
+   Axios Configuration
    ========================================================= */
 
-import axios, {
-  AxiosError,
-  AxiosResponse,
-  InternalAxiosRequestConfig,
-  AxiosRequestHeaders,
-} from "axios";
+import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig, AxiosRequestHeaders } from "axios";
 
-import { API_BASE_URL } from "./api.constants";
+import { API_BASE_URL } from "@/constants/api.constants";
+import { getAuthToken, useAuthStore } from "@/store/auth.store";
 
 /* =========================================================
    AXIOS INSTANCE
@@ -32,29 +28,22 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Read token from storage (adjust if using cookies)
-    const token =
-      typeof window !== "undefined"
-        ? localStorage.getItem("access_token")
-        : null;
+    const token = getAuthToken();
 
     if (token) {
       const headers = (config.headers as AxiosRequestHeaders) ?? {};
-      (headers as AxiosRequestHeaders)["Authorization"] = `Bearer ${token}`;
+      headers["Authorization"] = `Bearer ${token}`;
       config.headers = headers;
     }
 
     // Dev-only logging
     if (process.env.NODE_ENV === "development") {
-      console.log(
-        `[API REQUEST] ${config.method?.toUpperCase()} ${config.url}`,
-        config
-      );
+      console.log(`[API REQUEST] ${config.method?.toUpperCase()} ${config.url}`, config);
     }
 
     return config;
   },
-  (error: AxiosError) => Promise.reject(error)
+  (error: AxiosError) => Promise.reject(error),
 );
 
 /* =========================================================
@@ -69,10 +58,7 @@ apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
     // Dev-only logging
     if (process.env.NODE_ENV === "development") {
-      console.log(
-        `[API RESPONSE] ${response.config.url}`,
-        response
-      );
+      console.log(`[API RESPONSE] ${response.config.url}`, response);
     }
     return response;
   },
@@ -80,9 +66,11 @@ apiClient.interceptors.response.use(
     const status = error.response?.status;
 
     // Unauthorized → force logout
-    if (status === 401 && typeof window !== "undefined") {
-      localStorage.removeItem("access_token");
-      window.location.href = "/login";
+    if (status === 401) {
+      useAuthStore.getState().logout();
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
     }
 
     // Forbidden → permission issue
@@ -95,8 +83,7 @@ apiClient.interceptors.response.use(
       console.error("Server error. Please try again later.");
     }
 
-    const message =
-      error.response?.data?.message || error.message || "Unexpected API error";
+    const message = error.response?.data?.message || error.message || "Unexpected API error";
 
     // Normalize rejected error shape for callers
     return Promise.reject({
@@ -104,5 +91,5 @@ apiClient.interceptors.response.use(
       message,
       original: error,
     });
-  }
+  },
 );
