@@ -28,70 +28,70 @@ export const SIDEBAR_ITEMS = [
   {
     id: "suppliers",
     label: "Suppliers",
-    href: "/suppliers",
+    href: "/dashboard/suppliers",
     icon: Truck,
   },
 
   {
     id: "users",
     label: "Users",
-    href: "/users",
+    href: "/dashboard/users",
     icon: Users,
   },
 
   {
     id: "categories",
     label: "Categories",
-    href: "/categories",
+    href: "/dashboard/categories",
     icon: Boxes,
   },
 
   {
     id: "products",
     label: "Products",
-    href: "/products",
+    href: "/dashboard/products",
     icon: Package,
   },
 
   {
     id: "warehouses",
     label: "Warehouses",
-    href: "/warehouses",
+    href: "/dashboard/warehouses",
     icon: Warehouse,
   },
 
   {
     id: "inventory",
     label: "Inventory",
-    href: "/inventory",
+    href: "/dashboard/inventory",
     icon: Boxes,
   },
 
   {
     id: "purchase_orders",
     label: "Purchase Orders",
-    href: "/purchase-orders",
+    href: "/dashboard/purchase-orders",
     icon: ShoppingCart,
   },
 
   {
     id: "invoices",
     label: "Invoices",
-    href: "/invoices",
+    href: "/dashboard/invoices",
     icon: FileText,
   },
 
   {
     id: "customers",
     label: "Customers",
-    href: "/customers",
+    href: "/dashboard/customers",
     icon: User,
   },
 
   {
     id: "shipments",
     label: "Shipments",
-    href: "/shipments",
+    href: "/dashboard/shipments",
     icon: Truck,
   },
 ];
@@ -102,14 +102,14 @@ export const SIDEBAR_ITEMS = [
 
 export const PAGE_TITLES: Record<string, string> = {
   "/dashboard": "Dashboard",
-  "/suppliers": "Suppliers",
-  "/users": "Users",
-  "/categories": "Categories",
-  "/products": "Products",
-  "/warehouses": "Warehouses",
-  "/inventory": "Inventory",
-  "/purchase-orders": "Purchase Orders",
-  "/invoices": "Invoices",
-  "/customers": "Customers",
-  "/shipments": "Shipments",
+  "/dashboard/suppliers": "Suppliers",
+  "/dashboard/users": "Users",
+  "/dashboard/categories": "Categories",
+  "/dashboard/products": "Products",
+  "/dashboard/warehouses": "Warehouses",
+  "/dashboard/inventory": "Inventory",
+  "/dashboard/purchase-orders": "Purchase Orders",
+  "/dashboard/invoices": "Invoices",
+  "/dashboard/customers": "Customers",
+  "/dashboard/shipments": "Shipments",
 };
