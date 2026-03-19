@@ -14,10 +14,11 @@ const OPTS = {
 };
 
 export type AuthUser = {
-  id: string;
+  user_id: string;
   name: string;
   email: string;
   role: string;
+  supplier_id?: string;
 };
 
 export type AuthSession = {
@@ -31,7 +32,7 @@ export type AuthSession = {
    ========================================================= */
 
 export async function setSession(token: string, user: AuthUser) {
-  const store = await cookies();
+  const store = await cookies();  
   store.set(TOKEN_KEY, token, OPTS);
   store.set(USER_KEY, JSON.stringify(user), OPTS);
 }

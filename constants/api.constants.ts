@@ -6,8 +6,7 @@
    BASE CONFIG
    ========================================================= */
 
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api/v1";
 
 /*
    Helper to safely build API URLs
@@ -20,6 +19,7 @@ const api = (path: string) => `${API_BASE_URL}${path}`;
 
 export const AUTH_API = {
   login: api("/auth/login"),
+  register: api("/auth/register"),
 };
 
 /* =========================================================
@@ -30,7 +30,7 @@ export const SUPPLIER_API = {
   list: api("/suppliers"),
   create: api("/suppliers"),
   detail: (id: string) => api(`/suppliers/${id}`),
-  update: (id: string) => api(`/suppliers/${id}`),
+  patch: (id: string) => api(`/suppliers/${id}`),
   delete: (id: string) => api(`/suppliers/${id}`),
 };
 
@@ -42,7 +42,7 @@ export const USER_API = {
   list: api("/users"),
   create: api("/users"),
   detail: (id: string) => api(`/users/${id}`),
-  update: (id: string) => api(`/users/${id}`),
+  patch: (id: string) => api(`/users/${id}`),
   delete: (id: string) => api(`/users/${id}`),
 
   activate: (id: string) => api(`/users/${id}/activate`),
@@ -84,11 +84,9 @@ export const PRODUCT_API = {
   update: (id: string) => api(`/products/${id}`),
   delete: (id: string) => api(`/products/${id}`),
 
-  bySupplier: (supplierId: string) =>
-    api(`/products/supplier/${supplierId}`),
+  bySupplier: (supplierId: string) => api(`/products/supplier/${supplierId}`),
 
-  byCategory: (categoryId: string) =>
-    api(`/products/category/${categoryId}`),
+  byCategory: (categoryId: string) => api(`/products/category/${categoryId}`),
 };
 
 /* =========================================================
@@ -102,11 +100,9 @@ export const INVENTORY_API = {
   update: (id: string) => api(`/inventory/${id}`),
   delete: (id: string) => api(`/inventory/${id}`),
 
-  byWarehouse: (warehouseId: string) =>
-    api(`/inventory/warehouse/${warehouseId}`),
+  byWarehouse: (warehouseId: string) => api(`/inventory/warehouse/${warehouseId}`),
 
-  byProduct: (productId: string) =>
-    api(`/inventory/product/${productId}`),
+  byProduct: (productId: string) => api(`/inventory/product/${productId}`),
 };
 
 /* =========================================================
@@ -144,8 +140,7 @@ export const INVOICE_API = {
   update: (id: string) => api(`/invoices/${id}`),
   delete: (id: string) => api(`/invoices/${id}`),
 
-  bySupplier: (supplierId: string) =>
-    api(`/invoices/supplier/${supplierId}`),
+  bySupplier: (supplierId: string) => api(`/invoices/supplier/${supplierId}`),
 };
 
 /* =========================================================
@@ -181,6 +176,5 @@ export const SHIPMENT_API = {
   update: (id: string) => api(`/shipments/${id}`),
   delete: (id: string) => api(`/shipments/${id}`),
 
-  byPurchaseOrder: (poId: string) =>
-    api(`/shipments/purchase-order/${poId}`),
+  byPurchaseOrder: (poId: string) => api(`/shipments/purchase-order/${poId}`),
 };

@@ -14,40 +14,6 @@ export type BaseEntity = {
 };
 
 /* =========================================================
-   ENUMS
-   ========================================================= */
-
-export type UserRole =
-  | "SUPERADMIN"
-  | "WAREHOUSE_MANAGER"
-  | "SUPPLIER";
-
-export type Status = "ACTIVE" | "INACTIVE";
-
-export type PurchaseOrderStatus =
-  | "DRAFT"
-  | "PENDING"
-  | "APPROVED"
-  | "SHIPPED"
-  | "RECEIVED"
-  | "CANCELLED";
-
-export type InvoiceStatus =
-  | "DRAFT"
-  | "ISSUED"
-  | "PAID"
-  | "OVERDUE"
-  | "CANCELLED";
-
-export type ShipmentStatus =
-  | "PENDING"
-  | "IN_TRANSIT"
-  | "DELIVERED"
-  | "FAILED";
-
-export type CustomerType = "BUSINESS" | "INDIVIDUAL";
-
-/* =========================================================
    USERS
    ========================================================= */
 
@@ -57,7 +23,7 @@ export interface User extends BaseEntity {
   email: string;
   password_hash?: string;
   phone_number?: string;
-  role: UserRole;
+  role: string;
   supplier_id?: UUID | null;
   is_active: boolean;
 }
@@ -72,7 +38,7 @@ export interface Supplier extends BaseEntity {
   contact_email?: string;
   contact_phone?: string;
   address?: string;
-  status: Status;
+  status: string;
 }
 
 /* =========================================================
@@ -100,7 +66,7 @@ export interface Product extends BaseEntity {
   price?: number;
   cost_price?: number;
   weight?: number;
-  status: Status;
+  status: string;
 }
 
 /* =========================================================
@@ -143,7 +109,7 @@ export interface PurchaseOrder extends BaseEntity {
   order_date?: string;
   expected_delivery?: string;
   total_amount?: number;
-  status?: PurchaseOrderStatus;
+  status?: string;
 }
 
 /* =========================================================
@@ -169,7 +135,7 @@ export interface Invoice extends BaseEntity {
   invoice_number?: string;
   invoice_date?: string;
   total_amount?: number;
-  status?: InvoiceStatus;
+  status?: string;
 }
 
 /* =========================================================
@@ -195,7 +161,7 @@ export interface Customer extends BaseEntity {
   phone?: string;
   email?: string;
   address?: string;
-  customer_type?: CustomerType;
+  customer_type?: string;
 }
 
 /* =========================================================
@@ -210,6 +176,6 @@ export interface Shipment extends BaseEntity {
   tracking_number?: string;
   shipment_date?: string;
   estimated_arrival?: string;
-  actual_arrival?: string;
-  status?: ShipmentStatus;
+  actual_arrival?: string | null;
+  status?: string;
 }

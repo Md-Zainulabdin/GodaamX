@@ -4,7 +4,7 @@ import "./globals.css";
 
 import { APP_DESCRIPTION, APP_TITLE } from "@/constants/constants";
 import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Providers } from "@/components/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
         <main>
-          <TooltipProvider>{children}</TooltipProvider>
+          <Providers>{children}</Providers>
         </main>
         <Toaster />
       </body>

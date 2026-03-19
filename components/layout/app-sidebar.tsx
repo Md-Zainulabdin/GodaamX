@@ -23,10 +23,7 @@ export function AppSidebar() {
           className="group flex cursor-pointer items-center justify-between rounded-md px-2 py-1.5 transition-colors hover:bg-zinc-50"
         >
           <div className="flex items-center gap-2.5">
-            <div className="flex size-6 items-center justify-center rounded bg-zinc-900 text-[10px] font-bold text-white">
-              O
-            </div>
-            <span className="text-sm font-semibold text-zinc-900">Anonymous</span>
+            <span className="text-xl font-semibold tracking-tight">GodaamX</span>
           </div>
         </Link>
       </SidebarHeader>
@@ -35,7 +32,7 @@ export function AppSidebar() {
         {/* Main Menu */}
         <section className="space-y-1">
           <h3 className="mb-2 px-3 text-[10px] font-bold tracking-widest text-zinc-400 uppercase">Main Menu</h3>
-          <nav className="space-y-0.5">
+          <nav className="space-y-2">
             {SIDEBAR_ITEMS.map((item) => {
               const active = isActive(item.href);
               const Icon = item.icon;

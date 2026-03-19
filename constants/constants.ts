@@ -9,7 +9,7 @@ import { LayoutDashboard, Users, Truck, Package, Boxes, Warehouse, ShoppingCart,
    APP META DATA
    ========================================================= */
 
-export const APP_TITLE = "Inventory & Logistic ERP System";
+export const APP_TITLE = "GodaamX — Inventory & Logistic ERP System";
 export const APP_DESCRIPTION =
   "Enterprise Resource Planning (ERP) system designed for inventory management and logistics operations";
 

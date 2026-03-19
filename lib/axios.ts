@@ -5,7 +5,7 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig, AxiosRequestHeaders } from "axios";
 
 import { API_BASE_URL } from "@/constants/api.constants";
-import { getAuthToken, useAuthStore } from "@/store/auth.store";
+import { getSession, clearSession } from "@/lib/auth";
 
 /* =========================================================
    AXIOS INSTANCE
@@ -27,12 +27,12 @@ export const apiClient = axios.create({
    ========================================================= */
 
 apiClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const token = getAuthToken();
+  async (config: InternalAxiosRequestConfig) => {
+    const session = await getSession();
 
-    if (token) {
+    if (session?.token) {
       const headers = (config.headers as AxiosRequestHeaders) ?? {};
-      headers["Authorization"] = `Bearer ${token}`;
+      headers["Authorization"] = `Bearer ${session?.token}`;
       config.headers = headers;
     }
 
@@ -62,12 +62,12 @@ apiClient.interceptors.response.use(
     }
     return response;
   },
-  (error: AxiosError<any>) => {
+  async (error: AxiosError<any>) => {
     const status = error.response?.status;
 
     // Unauthorized → force logout
     if (status === 401) {
-      useAuthStore.getState().logout();
+      await clearSession();
       if (typeof window !== "undefined") {
         window.location.href = "/login";
       }
@@ -83,7 +83,8 @@ apiClient.interceptors.response.use(
       console.error("Server error. Please try again later.");
     }
 
-    const message = error.response?.data?.message || error.message || "Unexpected API error";
+    const message =
+      error.response?.data?.detail || error.response?.data?.message || error.message || "Unexpected API error";
 
     // Normalize rejected error shape for callers
     return Promise.reject({

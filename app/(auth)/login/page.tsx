@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +14,9 @@ import { Field, FieldDescription, FieldGroup, FieldLabel, FieldError } from "@/c
 import { Input } from "@/components/ui/input";
 import { loginSchema, type LoginSchema } from "@/schemas/schemas";
 import { useAuth } from "@/hooks/use-auth";
+
+import { apiClient } from "@/lib/axios";
+import { AUTH_API } from "@/constants/api.constants";
 
 export default function Login() {
   const { save } = useAuth();
@@ -27,20 +31,12 @@ export default function Login() {
     const payload = { email: data.email?.trim(), password: data.password };
 
     try {
-      const res = await fetch("/api/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await apiClient.post(AUTH_API.login, payload);
 
-      const data = await res.json();
-      save(data.access_token, data.user);
-
-      toast.success("Welcome back", {
-        description: "You have signed in successfully.",
-      });
+      save(res?.data?.access_token, res?.data?.user);
+      toast("You have signed in successfully.");
     } catch (err: any) {
-      toast.error("Login failed", { description: err.message });
+      toast(`Login failed: ${err.message}`);
     }
   }
 
@@ -89,7 +85,10 @@ export default function Login() {
                 {form.formState.errors.password && <FieldError errors={[form.formState.errors.password]} />}
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit" disabled={form.formState.isSubmitting}>
+                  {form.formState.isSubmitting && <Loader2 className="mr-2 size-4 animate-spin" />}
+                  {form.formState.isSubmitting ? "Signing in..." : "Login"}
+                </Button>
               </Field>
             </FieldGroup>
           </form>
