@@ -2,7 +2,6 @@ import { statusBadge } from "@/components/ui/status-badge";
 import { DataTableActions } from "@/components/tables/data-table-actions";
 import { ColumnDef } from "@tanstack/react-table";
 
-
 /* =========================================================
    TABLE COLUMN TYPE
    ========================================================= */
@@ -14,7 +13,7 @@ export type TableColumn<TData = any> = {
 };
 
 type ActionsColumnOptions = {
-  basePath: string;                        
+  basePath: string;
   idKey: string;
   onDelete: (id: string) => void;
   isDeleting?: boolean;
@@ -82,10 +81,10 @@ export const SUPPLIER_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const CATEGORY_COLUMNS: TableColumn[] = [
-  { accessorKey: "category_id", header: "Category ID" },
+  // { accessorKey: "category_id", header: "Category ID" },
   { accessorKey: "category_name", header: "Category Name" },
   { accessorKey: "description", header: "Description" },
-  { accessorKey: "parent_category_id", header: "Parent Category" },
+  { accessorKey: "parent_category_name", header: "Parent Category" },
   { accessorKey: "created_at", header: "Created At", cell: dateCell },
 ];
 
@@ -94,7 +93,7 @@ export const CATEGORY_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const PRODUCT_COLUMNS: TableColumn[] = [
-  { accessorKey: "product_id", header: "Product ID" },
+  // { accessorKey: "product_id", header: "Product ID" },
   { accessorKey: "product_name", header: "Product Name" },
   { accessorKey: "sku", header: "SKU" },
   { accessorKey: "category_id", header: "Category" },

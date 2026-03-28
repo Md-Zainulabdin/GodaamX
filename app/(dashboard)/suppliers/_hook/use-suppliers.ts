@@ -8,7 +8,7 @@ import { SUPPLIER_API } from "@/constants/api.constants";
 import { SupplierFormValues } from "@/schemas/schemas";
 
 /* =========================================================
-   Query Key
+   Suppliers Key
    ========================================================= */
 
 export const supplierKeys = {

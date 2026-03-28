@@ -57,7 +57,7 @@ export const CATEGORY_API = {
   list: api("/categories"),
   create: api("/categories"),
   detail: (id: string) => api(`/categories/${id}`),
-  update: (id: string) => api(`/categories/${id}`),
+  patch: (id: string) => api(`/categories/${id}`),
   delete: (id: string) => api(`/categories/${id}`),
 };
 
@@ -69,7 +69,7 @@ export const WAREHOUSE_API = {
   list: api("/warehouses"),
   create: api("/warehouses"),
   detail: (id: string) => api(`/warehouses/${id}`),
-  update: (id: string) => api(`/warehouses/${id}`),
+  patch: (id: string) => api(`/warehouses/${id}`),
   delete: (id: string) => api(`/warehouses/${id}`),
 };
 
@@ -81,7 +81,7 @@ export const PRODUCT_API = {
   list: api("/products"),
   create: api("/products"),
   detail: (id: string) => api(`/products/${id}`),
-  update: (id: string) => api(`/products/${id}`),
+  patch: (id: string) => api(`/products/${id}`),
   delete: (id: string) => api(`/products/${id}`),
 
   bySupplier: (supplierId: string) => api(`/products/supplier/${supplierId}`),

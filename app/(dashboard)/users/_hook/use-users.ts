@@ -8,7 +8,7 @@ import { USER_API } from "@/constants/api.constants";
 import { UserFormValues } from "@/schemas/schemas";
 
 /* =========================================================
-   Query Key
+   Users Key
    ========================================================= */
 
 export const userKeys = {

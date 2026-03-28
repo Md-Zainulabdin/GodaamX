@@ -1,0 +1,23 @@
+"use client";
+
+import { DataTable } from "@/components/tables/data-table";
+import { PRODUCT_COLUMNS, actionsColumn } from "@/constants/table.constants";
+import { useProducts, useDeleteProduct } from "@/app/(dashboard)/products/_hook/use-products";
+import { Product } from "@/types/global";
+
+export function ProductTable() {
+  const { data: products } = useProducts();
+  const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
+
+  const columns = [
+    ...PRODUCT_COLUMNS,
+    actionsColumn<Product>({
+      basePath: "/products/update",
+      idKey: "product_id",
+      onDelete: deleteProduct,
+      isDeleting,
+    }),
+  ];
+
+  return <DataTable columns={columns} data={products ?? []} />;
+}
