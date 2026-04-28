@@ -1,0 +1,23 @@
+"use client";
+
+import { DataTable } from "@/components/tables/data-table";
+import { INVENTORY_COLUMNS, actionsColumn } from "@/constants/table.constants";
+import { useInventoryList, useDeleteInventory } from "@/app/(dashboard)/inventory/_hook/use-inventory";
+import { Inventory } from "@/types/global";
+
+export function InventoryTable() {
+  const { data: inventory } = useInventoryList();
+  const { mutate: deleteInventory, isPending: isDeleting } = useDeleteInventory();
+
+  const columns = [
+    ...INVENTORY_COLUMNS,
+    actionsColumn<Inventory>({
+      basePath: "/inventory/update",
+      idKey: "inventory_id",
+      onDelete: deleteInventory,
+      isDeleting,
+    }),
+  ];
+
+  return <DataTable columns={columns} data={inventory ?? []} />;
+}

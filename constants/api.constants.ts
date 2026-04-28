@@ -18,8 +18,8 @@ const api = (path: string) => `${API_BASE_URL}${path}`;
    ========================================================= */
 
 export const AUTH_API = {
-  login: api("/auth/login"),
-  register: api("/auth/register"),
+   login: api("/auth/login"),
+   register: api("/auth/register"),
 };
 
 /* =========================================================
@@ -27,11 +27,11 @@ export const AUTH_API = {
    ========================================================= */
 
 export const SUPPLIER_API = {
-  list: api("/suppliers"),
-  create: api("/suppliers"),
-  detail: (id: string) => api(`/suppliers/${id}`),
-  patch: (id: string) => api(`/suppliers/${id}`),
-  delete: (id: string) => api(`/suppliers/${id}`),
+   list: api("/suppliers"),
+   create: api("/suppliers"),
+   detail: (id: string) => api(`/suppliers/${id}`),
+   put: (id: string) => api(`/suppliers/${id}`),
+   delete: (id: string) => api(`/suppliers/${id}`),
 };
 
 /* =========================================================
@@ -39,14 +39,14 @@ export const SUPPLIER_API = {
    ========================================================= */
 
 export const USER_API = {
-  list: api("/users"),
-  create: api("/users"),
-  detail: (id: string) => api(`/users/${id}`),
-  patch: (id: string) => api(`/users/${id}`),
-  delete: (id: string) => api(`/users/${id}`),
+   list: api("/users"),
+   create: api("/users"),
+   detail: (id: string) => api(`/users/${id}`),
+   put: (id: string) => api(`/users/${id}`),
+   delete: (id: string) => api(`/users/${id}`),
 
-  activate: (id: string) => api(`/users/${id}/activate`),
-  deactivate: (id: string) => api(`/users/${id}/deactivate`),
+   activate: (id: string) => api(`/users/${id}/activate`),
+   deactivate: (id: string) => api(`/users/${id}/deactivate`),
 };
 
 /* =========================================================
@@ -54,11 +54,11 @@ export const USER_API = {
    ========================================================= */
 
 export const CATEGORY_API = {
-  list: api("/categories"),
-  create: api("/categories"),
-  detail: (id: string) => api(`/categories/${id}`),
-  patch: (id: string) => api(`/categories/${id}`),
-  delete: (id: string) => api(`/categories/${id}`),
+   list: api("/categories"),
+   create: api("/categories"),
+   detail: (id: string) => api(`/categories/${id}`),
+   put: (id: string) => api(`/categories/${id}`),
+   delete: (id: string) => api(`/categories/${id}`),
 };
 
 /* =========================================================
@@ -66,11 +66,11 @@ export const CATEGORY_API = {
    ========================================================= */
 
 export const WAREHOUSE_API = {
-  list: api("/warehouses"),
-  create: api("/warehouses"),
-  detail: (id: string) => api(`/warehouses/${id}`),
-  patch: (id: string) => api(`/warehouses/${id}`),
-  delete: (id: string) => api(`/warehouses/${id}`),
+   list: api("/warehouses"),
+   create: api("/warehouses"),
+   detail: (id: string) => api(`/warehouses/${id}`),
+   put: (id: string) => api(`/warehouses/${id}`),
+   delete: (id: string) => api(`/warehouses/${id}`),
 };
 
 /* =========================================================
@@ -78,15 +78,15 @@ export const WAREHOUSE_API = {
    ========================================================= */
 
 export const PRODUCT_API = {
-  list: api("/products"),
-  create: api("/products"),
-  detail: (id: string) => api(`/products/${id}`),
-  patch: (id: string) => api(`/products/${id}`),
-  delete: (id: string) => api(`/products/${id}`),
+   list: api("/products"),
+   create: api("/products"),
+   detail: (id: string) => api(`/products/${id}`),
+   put: (id: string) => api(`/products/${id}`),
+   delete: (id: string) => api(`/products/${id}`),
 
-  bySupplier: (supplierId: string) => api(`/products/supplier/${supplierId}`),
+   bySupplier: (supplierId: string) => api(`/products/supplier/${supplierId}`),
 
-  byCategory: (categoryId: string) => api(`/products/category/${categoryId}`),
+   byCategory: (categoryId: string) => api(`/products/category/${categoryId}`),
 };
 
 /* =========================================================
@@ -94,15 +94,15 @@ export const PRODUCT_API = {
    ========================================================= */
 
 export const INVENTORY_API = {
-  list: api("/inventory"),
-  create: api("/inventory"),
-  detail: (id: string) => api(`/inventory/${id}`),
-  update: (id: string) => api(`/inventory/${id}`),
-  delete: (id: string) => api(`/inventory/${id}`),
+   list: api("/inventory"),
+   create: api("/inventory"),
+   detail: (id: string) => api(`/inventory/${id}`),
+   update: (id: string) => api(`/inventory/${id}`),
+   delete: (id: string) => api(`/inventory/${id}`),
 
-  byWarehouse: (warehouseId: string) => api(`/inventory/warehouse/${warehouseId}`),
+   byWarehouse: (warehouseId: string) => api(`/inventory/warehouse/${warehouseId}`),
 
-  byProduct: (productId: string) => api(`/inventory/product/${productId}`),
+   byProduct: (productId: string) => api(`/inventory/product/${productId}`),
 };
 
 /* =========================================================
@@ -110,13 +110,13 @@ export const INVENTORY_API = {
    ========================================================= */
 
 export const PURCHASE_ORDER_API = {
-  list: api("/purchase-orders"),
-  create: api("/purchase-orders"),
-  detail: (id: string) => api(`/purchase-orders/${id}`),
-  update: (id: string) => api(`/purchase-orders/${id}`),
-  delete: (id: string) => api(`/purchase-orders/${id}`),
+   list: api("/purchase-order"),
+   create: api("/purchase-order"),
+   detail: (id: string) => api(`/purchase-order/${id}`),
+   update: (id: string) => api(`/purchase-order/${id}`),
+   delete: (id: string) => api(`/purchase-order/${id}`),
 
-  items: (poId: string) => api(`/purchase-orders/${poId}/items`),
+   items: (poId: string) => api(`/purchase-order/${poId}/items`),
 };
 
 /* =========================================================
@@ -124,9 +124,9 @@ export const PURCHASE_ORDER_API = {
    ========================================================= */
 
 export const PURCHASE_ORDER_ITEM_API = {
-  create: api("/purchase-order-items"),
-  update: (id: string) => api(`/purchase-order-items/${id}`),
-  delete: (id: string) => api(`/purchase-order-items/${id}`),
+   create: api("/purchase-order-items"),
+   update: (id: string) => api(`/purchase-order-items/${id}`),
+   delete: (id: string) => api(`/purchase-order-items/${id}`),
 };
 
 /* =========================================================
@@ -134,13 +134,13 @@ export const PURCHASE_ORDER_ITEM_API = {
    ========================================================= */
 
 export const INVOICE_API = {
-  list: api("/invoices"),
-  create: api("/invoices"),
-  detail: (id: string) => api(`/invoices/${id}`),
-  update: (id: string) => api(`/invoices/${id}`),
-  delete: (id: string) => api(`/invoices/${id}`),
+   list: api("/invoices"),
+   create: api("/invoices"),
+   detail: (id: string) => api(`/invoices/${id}`),
+   update: (id: string) => api(`/invoices/${id}`),
+   delete: (id: string) => api(`/invoices/${id}`),
 
-  bySupplier: (supplierId: string) => api(`/invoices/supplier/${supplierId}`),
+   bySupplier: (supplierId: string) => api(`/invoices/supplier/${supplierId}`),
 };
 
 /* =========================================================
@@ -148,9 +148,9 @@ export const INVOICE_API = {
    ========================================================= */
 
 export const INVOICE_ITEM_API = {
-  create: api("/invoice-items"),
-  update: (id: string) => api(`/invoice-items/${id}`),
-  delete: (id: string) => api(`/invoice-items/${id}`),
+   create: api("/invoice-items"),
+   update: (id: string) => api(`/invoice-items/${id}`),
+   delete: (id: string) => api(`/invoice-items/${id}`),
 };
 
 /* =========================================================
@@ -158,11 +158,11 @@ export const INVOICE_ITEM_API = {
    ========================================================= */
 
 export const CUSTOMER_API = {
-  list: api("/customers"),
-  create: api("/customers"),
-  detail: (id: string) => api(`/customers/${id}`),
-  update: (id: string) => api(`/customers/${id}`),
-  delete: (id: string) => api(`/customers/${id}`),
+   list: api("/customers"),
+   create: api("/customers"),
+   detail: (id: string) => api(`/customers/${id}`),
+   update: (id: string) => api(`/customers/${id}`),
+   delete: (id: string) => api(`/customers/${id}`),
 };
 
 /* =========================================================
@@ -170,11 +170,11 @@ export const CUSTOMER_API = {
    ========================================================= */
 
 export const SHIPMENT_API = {
-  list: api("/shipments"),
-  create: api("/shipments"),
-  detail: (id: string) => api(`/shipments/${id}`),
-  update: (id: string) => api(`/shipments/${id}`),
-  delete: (id: string) => api(`/shipments/${id}`),
+   list: api("/shipments"),
+   create: api("/shipments"),
+   detail: (id: string) => api(`/shipments/${id}`),
+   update: (id: string) => api(`/shipments/${id}`),
+   delete: (id: string) => api(`/shipments/${id}`),
 
-  byPurchaseOrder: (poId: string) => api(`/shipments/purchase-order/${poId}`),
+   byPurchaseOrder: (poId: string) => api(`/shipments/purchase-order/${poId}`),
 };

@@ -9,6 +9,7 @@ export type FormField = {
   placeholder?: string;
   options?: { label: string; value: string }[];
   hidden?: boolean;
+  optional?: boolean;
 };
 
 /* =========================================================
@@ -32,12 +33,14 @@ export const USER_FORM_FIELDS: FormField[] = [
     label: "Password",
     type: "password",
     placeholder: "Enter password",
+    optional: true,
   },
   {
     name: "phone_number",
     label: "Phone Number",
     type: "tel",
     placeholder: "Enter phone number",
+    optional: true,
   },
   {
     name: "role",
@@ -47,6 +50,12 @@ export const USER_FORM_FIELDS: FormField[] = [
       { label: "Super Admin", value: "SUPERADMIN" },
       { label: "Supplier", value: "SUPPLIER" },
     ],
+  },
+  {
+    name: "supplier_id",
+    label: "Supplier",
+    type: "select",
+    optional: true,
   },
 ];
 
@@ -66,17 +75,20 @@ export const SUPPLIER_FORM_FIELDS: FormField[] = [
     label: "Email",
     type: "email",
     placeholder: "Enter email address",
+    optional: true,
   },
   {
     name: "contact_phone",
     label: "Phone",
     type: "tel",
     placeholder: "Enter phone number",
+    optional: true,
   },
   {
     name: "address",
     label: "Address",
     type: "textarea",
+    optional: true,
   },
   {
     name: "status",
@@ -102,11 +114,13 @@ export const CATEGORY_FORM_FIELDS: FormField[] = [
     name: "description",
     label: "Description",
     type: "textarea",
+    optional: true,
   },
   {
     name: "parent_category_id",
     label: "Parent Category",
     type: "select",
+    optional: true,
   },
 ];
 
@@ -127,11 +141,18 @@ export const PRODUCT_FORM_FIELDS: FormField[] = [
     name: "category_id",
     label: "Category",
     type: "select",
+    optional: true,
   },
   {
     name: "supplier_id",
     label: "Supplier",
     type: "select",
+  },
+  {
+    name: "description",
+    label: "Description",
+    type: "textarea",
+    optional: true,
   },
   {
     name: "price",
@@ -142,11 +163,13 @@ export const PRODUCT_FORM_FIELDS: FormField[] = [
     name: "cost_price",
     label: "Cost Price",
     type: "number",
+    optional: true,
   },
   {
     name: "weight",
     label: "Weight",
     type: "number",
+    optional: true,
   },
   {
     name: "status",
@@ -171,25 +194,33 @@ export const WAREHOUSE_FORM_FIELDS: FormField[] = [
   {
     name: "location",
     label: "Location",
+    optional: true,
   },
   {
     name: "city",
     label: "City",
+    optional: true,
   },
   {
     name: "capacity",
     label: "Capacity",
     type: "number",
+    optional: true,
   },
   {
     name: "phone",
     label: "Phone",
     type: "tel",
+    optional: true,
   },
   {
-    name: "manager_id",
-    label: "Manager",
+    name: "status",
+    label: "Status",
     type: "select",
+    options: [
+      { label: "Active", value: "Active" },
+      { label: "Inactive", value: "Inactive" },
+    ],
   },
 ];
 
@@ -207,23 +238,40 @@ export const PURCHASE_ORDER_FORM_FIELDS: FormField[] = [
     name: "warehouse_id",
     label: "Warehouse",
     type: "select",
+    optional: true,
+  },
+  {
+    name: "order_number",
+    label: "Order Number",
+    placeholder: "Enter order number",
   },
   {
     name: "order_date",
     label: "Order Date",
     type: "date",
+    optional: true,
   },
   {
     name: "expected_delivery",
     label: "Expected Delivery",
     type: "date",
+    optional: true,
+  },
+  {
+    name: "total_amount",
+    label: "Total Amount",
+    type: "number",
+    optional: true,
   },
   {
     name: "status",
     label: "Status",
     type: "select",
     options: [
+      { label: "Draft", value: "Draft" },
       { label: "Pending", value: "Pending" },
+      { label: "Approved", value: "Approved" },
+      { label: "Shipped", value: "Shipped" },
       { label: "Received", value: "Received" },
       { label: "Cancelled", value: "Cancelled" },
     ],
@@ -240,32 +288,16 @@ export const CUSTOMER_FORM_FIELDS: FormField[] = [
     label: "Customer Name",
   },
   {
-    name: "contact_person",
-    label: "Contact Person",
-  },
-  {
     name: "phone",
     label: "Phone",
     type: "tel",
+    optional: true,
   },
   {
     name: "email",
     label: "Email",
     type: "email",
-  },
-  {
-    name: "address",
-    label: "Address",
-    type: "textarea",
-  },
-  {
-    name: "customer_type",
-    label: "Customer Type",
-    type: "select",
-    options: [
-      { label: "Business", value: "Business" },
-      { label: "Individual", value: "Individual" },
-    ],
+    optional: true,
   },
 ];
 
@@ -294,6 +326,13 @@ export const INVENTORY_FORM_FIELDS: FormField[] = [
     label: "Reorder Level",
     type: "number",
     placeholder: "Minimum stock level",
+    optional: true,
+  },
+  {
+    name: "last_restocked",
+    label: "Last Restocked",
+    type: "date",
+    optional: true,
   },
 ];
 
@@ -311,11 +350,13 @@ export const SHIPMENT_FORM_FIELDS: FormField[] = [
     name: "warehouse_id",
     label: "Warehouse",
     type: "select",
+    optional: true,
   },
   {
     name: "tracking_number",
     label: "Tracking Number",
     placeholder: "Enter tracking number",
+    optional: true,
   },
   {
     name: "status",
@@ -344,30 +385,34 @@ export const INVOICE_FORM_FIELDS: FormField[] = [
     name: "po_id",
     label: "Purchase Order",
     type: "select",
+    optional: true,
   },
   {
     name: "invoice_number",
     label: "Invoice Number",
     placeholder: "Enter invoice number",
+    optional: true,
   },
   {
     name: "invoice_date",
     label: "Invoice Date",
     type: "date",
+    optional: true,
   },
   {
     name: "total_amount",
     label: "Total Amount",
     type: "number",
+    optional: true,
   },
   {
     name: "status",
     label: "Status",
     type: "select",
     options: [
-      { label: "Pending", value: "Pending" },
-      { label: "Paid", value: "Paid" },
-      { label: "Cancelled", value: "Cancelled" },
+      { label: "Pending", value: "PENDING" },
+      { label: "Paid", value: "PAID" },
+      { label: "Cancelled", value: "CANCELLED" },
     ],
   },
 ];

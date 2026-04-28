@@ -8,6 +8,16 @@ import { API_BASE_URL } from "@/constants/api.constants";
 import { getSession, clearSession } from "@/lib/auth";
 
 /* =========================================================
+   API Error Type
+   ========================================================= */
+
+export type ApiError = {
+  status: number | undefined;
+  message: string;
+  original: AxiosError;
+};
+
+/* =========================================================
    AXIOS INSTANCE
    ========================================================= */
 
@@ -32,13 +42,13 @@ apiClient.interceptors.request.use(
 
     if (session?.token) {
       const headers = (config.headers as AxiosRequestHeaders) ?? {};
-      headers["Authorization"] = `Bearer ${session?.token}`;
+      headers["Authorization"] = `Bearer ${session.token}`;
       config.headers = headers;
     }
 
     // Dev-only logging
     if (process.env.NODE_ENV === "development") {
-      console.log(`[API REQUEST] ${config.method?.toUpperCase()} ${config.url}`, config);
+      console.log(`[API REQUEST] ${config.method?.toUpperCase()} ${config.url}`);
     }
 
     return config;
@@ -56,13 +66,9 @@ apiClient.interceptors.request.use(
 
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
-    // Dev-only logging
-    if (process.env.NODE_ENV === "development") {
-      console.log(`[API RESPONSE] ${response.config.url}`, response);
-    }
     return response;
   },
-  async (error: AxiosError<any>) => {
+  async (error: AxiosError<{ detail?: string; message?: string }>) => {
     const status = error.response?.status;
 
     // Unauthorized → force logout
@@ -87,10 +93,11 @@ apiClient.interceptors.response.use(
       error.response?.data?.detail || error.response?.data?.message || error.message || "Unexpected API error";
 
     // Normalize rejected error shape for callers
-    return Promise.reject({
+    const apiError: ApiError = {
       status,
       message,
       original: error,
-    });
+    };
+    return Promise.reject(apiError);
   },
 );

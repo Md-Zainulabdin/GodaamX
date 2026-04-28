@@ -6,6 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
    TABLE COLUMN TYPE
    ========================================================= */
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TableColumn<TData = any> = {
   accessorKey: string;
   header: string;
@@ -38,14 +39,30 @@ export function actionsColumn<TData>(opts: ActionsColumnOptions): TableColumn<TD
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const dateCell: ColumnDef<any>["cell"] = ({ getValue }) => {
   const raw = getValue<string>();
   if (!raw) return "—";
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(new Date(raw));
+  try {
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    }).format(new Date(raw));
+  } catch {
+    return "—";
+  }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const currencyCell: ColumnDef<any>["cell"] = ({ getValue }) => {
+  const raw = getValue<number>();
+  if (raw == null) return "—";
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+  }).format(raw);
 };
 
 /* =========================================================
@@ -53,7 +70,6 @@ const dateCell: ColumnDef<any>["cell"] = ({ getValue }) => {
    ========================================================= */
 
 export const USER_COLUMNS: TableColumn[] = [
-  // { accessorKey: "user_id", header: "User ID" },
   { accessorKey: "name", header: "Name" },
   { accessorKey: "email", header: "Email" },
   { accessorKey: "phone_number", header: "Phone" },
@@ -67,7 +83,6 @@ export const USER_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const SUPPLIER_COLUMNS: TableColumn[] = [
-  // { accessorKey: "supplier_id", header: "Supplier ID" },
   { accessorKey: "supplier_name", header: "Supplier Name" },
   { accessorKey: "contact_email", header: "Email" },
   { accessorKey: "contact_phone", header: "Phone" },
@@ -81,7 +96,6 @@ export const SUPPLIER_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const CATEGORY_COLUMNS: TableColumn[] = [
-  // { accessorKey: "category_id", header: "Category ID" },
   { accessorKey: "category_name", header: "Category Name" },
   { accessorKey: "description", header: "Description" },
   { accessorKey: "parent_category_name", header: "Parent Category" },
@@ -93,13 +107,12 @@ export const CATEGORY_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const PRODUCT_COLUMNS: TableColumn[] = [
-  // { accessorKey: "product_id", header: "Product ID" },
   { accessorKey: "product_name", header: "Product Name" },
   { accessorKey: "sku", header: "SKU" },
   { accessorKey: "category_id", header: "Category" },
   { accessorKey: "supplier_id", header: "Supplier" },
-  { accessorKey: "price", header: "Price" },
-  { accessorKey: "cost_price", header: "Cost Price" },
+  { accessorKey: "price", header: "Price", cell: currencyCell },
+  { accessorKey: "cost_price", header: "Cost Price", cell: currencyCell },
   { accessorKey: "weight", header: "Weight" },
   { accessorKey: "status", header: "Status", cell: statusBadge },
 ];
@@ -109,13 +122,13 @@ export const PRODUCT_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const WAREHOUSE_COLUMNS: TableColumn[] = [
-  { accessorKey: "warehouse_id", header: "Warehouse ID" },
   { accessorKey: "warehouse_name", header: "Warehouse Name" },
   { accessorKey: "location", header: "Location" },
   { accessorKey: "city", header: "City" },
   { accessorKey: "capacity", header: "Capacity" },
   { accessorKey: "phone", header: "Phone" },
-  { accessorKey: "manager_id", header: "Manager" },
+  { accessorKey: "is_active", header: "Status", cell: statusBadge },
+  { accessorKey: "created_at", header: "Created At", cell: dateCell },
 ];
 
 /* =========================================================
@@ -123,12 +136,11 @@ export const WAREHOUSE_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const INVENTORY_COLUMNS: TableColumn[] = [
-  { accessorKey: "inventory_id", header: "Inventory ID" },
   { accessorKey: "product_id", header: "Product" },
   { accessorKey: "warehouse_id", header: "Warehouse" },
   { accessorKey: "quantity", header: "Quantity" },
   { accessorKey: "reorder_level", header: "Reorder Level" },
-  { accessorKey: "last_restocked", header: "Last Restocked" },
+  { accessorKey: "last_restocked", header: "Last Restocked", cell: dateCell },
 ];
 
 /* =========================================================
@@ -136,13 +148,12 @@ export const INVENTORY_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const PURCHASE_ORDER_COLUMNS: TableColumn[] = [
-  { accessorKey: "po_id", header: "PO ID" },
   { accessorKey: "order_number", header: "Order Number" },
   { accessorKey: "supplier_id", header: "Supplier" },
-  { accessorKey: "warehouse_id", header: "Warehouse" },
-  { accessorKey: "order_date", header: "Order Date" },
-  { accessorKey: "expected_delivery", header: "Expected Delivery" },
-  { accessorKey: "total_amount", header: "Total Amount" },
+  { accessorKey: "warehouse_id", header: "Warehouse" }, 
+  { accessorKey: "order_date", header: "Order Date", cell: dateCell },
+  { accessorKey: "expected_delivery", header: "Expected Delivery", cell: dateCell },
+  { accessorKey: "total_amount", header: "Total Amount", cell: currencyCell },
   { accessorKey: "status", header: "Status", cell: statusBadge },
 ];
 
@@ -151,11 +162,9 @@ export const PURCHASE_ORDER_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const PURCHASE_ORDER_ITEM_COLUMNS: TableColumn[] = [
-  { accessorKey: "po_item_id", header: "PO Item ID" },
-  { accessorKey: "po_id", header: "Purchase Order" },
   { accessorKey: "product_id", header: "Product" },
   { accessorKey: "quantity", header: "Quantity" },
-  { accessorKey: "price", header: "Price" },
+  { accessorKey: "price", header: "Price", cell: currencyCell },
 ];
 
 /* =========================================================
@@ -163,12 +172,11 @@ export const PURCHASE_ORDER_ITEM_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const INVOICE_COLUMNS: TableColumn[] = [
-  { accessorKey: "invoice_id", header: "Invoice ID" },
   { accessorKey: "invoice_number", header: "Invoice Number" },
   { accessorKey: "supplier_id", header: "Supplier" },
   { accessorKey: "po_id", header: "Purchase Order" },
-  { accessorKey: "invoice_date", header: "Invoice Date" },
-  { accessorKey: "total_amount", header: "Total Amount" },
+  { accessorKey: "invoice_date", header: "Invoice Date", cell: dateCell },
+  { accessorKey: "total_amount", header: "Total Amount", cell: currencyCell },
   { accessorKey: "status", header: "Status", cell: statusBadge },
 ];
 
@@ -177,11 +185,9 @@ export const INVOICE_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const INVOICE_ITEM_COLUMNS: TableColumn[] = [
-  { accessorKey: "invoice_item_id", header: "Invoice Item ID" },
-  { accessorKey: "invoice_id", header: "Invoice" },
   { accessorKey: "product_id", header: "Product" },
   { accessorKey: "quantity", header: "Quantity" },
-  { accessorKey: "price", header: "Price" },
+  { accessorKey: "price", header: "Price", cell: currencyCell },
 ];
 
 /* =========================================================
@@ -189,13 +195,12 @@ export const INVOICE_ITEM_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const CUSTOMER_COLUMNS: TableColumn[] = [
-  { accessorKey: "customer_id", header: "Customer ID" },
   { accessorKey: "customer_name", header: "Customer Name" },
   { accessorKey: "contact_person", header: "Contact Person" },
   { accessorKey: "phone", header: "Phone" },
   { accessorKey: "email", header: "Email" },
   { accessorKey: "address", header: "Address" },
-  { accessorKey: "customer_type", header: "Customer Type" },
+  { accessorKey: "customer_type", header: "Customer Type", cell: statusBadge },
 ];
 
 /* =========================================================
@@ -203,13 +208,12 @@ export const CUSTOMER_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const SHIPMENT_COLUMNS: TableColumn[] = [
-  { accessorKey: "shipment_id", header: "Shipment ID" },
   { accessorKey: "po_id", header: "Purchase Order" },
   { accessorKey: "warehouse_id", header: "Warehouse" },
   { accessorKey: "carrier_name", header: "Carrier" },
   { accessorKey: "tracking_number", header: "Tracking Number" },
-  { accessorKey: "shipment_date", header: "Shipment Date" },
-  { accessorKey: "estimated_arrival", header: "Estimated Arrival" },
-  { accessorKey: "actual_arrival", header: "Actual Arrival" },
+  { accessorKey: "shipment_date", header: "Shipment Date", cell: dateCell },
+  { accessorKey: "estimated_arrival", header: "Estimated Arrival", cell: dateCell },
+  { accessorKey: "actual_arrival", header: "Actual Arrival", cell: dateCell },
   { accessorKey: "status", header: "Status", cell: statusBadge },
 ];
