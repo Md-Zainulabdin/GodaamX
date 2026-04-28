@@ -134,13 +134,13 @@ export const PURCHASE_ORDER_ITEM_API = {
    ========================================================= */
 
 export const INVOICE_API = {
-   list: api("/invoices"),
-   create: api("/invoices"),
-   detail: (id: string) => api(`/invoices/${id}`),
-   update: (id: string) => api(`/invoices/${id}`),
-   delete: (id: string) => api(`/invoices/${id}`),
+   list: api("/invoice"),
+   create: api("/invoice"),
+   detail: (id: string) => api(`/invoice/${id}`),
+   update: (id: string) => api(`/invoice/${id}`),
+   delete: (id: string) => api(`/invoice/${id}`),
 
-   bySupplier: (supplierId: string) => api(`/invoices/supplier/${supplierId}`),
+   bySupplier: (supplierId: string) => api(`/invoice/supplier/${supplierId}`),
 };
 
 /* =========================================================

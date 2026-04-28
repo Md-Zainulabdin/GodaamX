@@ -342,7 +342,7 @@ export const INVENTORY_FORM_FIELDS: FormField[] = [
 
 export const SHIPMENT_FORM_FIELDS: FormField[] = [
   {
-    name: "po_id",
+    name: "purchase_order_id",
     label: "Purchase Order",
     type: "select",
   },
@@ -353,9 +353,33 @@ export const SHIPMENT_FORM_FIELDS: FormField[] = [
     optional: true,
   },
   {
+    name: "carrier_name",
+    label: "Carrier Name",
+    type: "text",
+    optional: true,
+  },
+  {
     name: "tracking_number",
     label: "Tracking Number",
     placeholder: "Enter tracking number",
+    optional: true,
+  },
+  {
+    name: "shipment_date",
+    label: "Shipment Date",
+    type: "date",
+    optional: true,
+  },
+  {
+    name: "estimated_arrival",
+    label: "Estimated Arrival",
+    type: "date",
+    optional: true,
+  },
+  {
+    name: "actual_arrival",
+    label: "Actual Arrival",
+    type: "date",
     optional: true,
   },
   {
@@ -363,11 +387,18 @@ export const SHIPMENT_FORM_FIELDS: FormField[] = [
     label: "Status",
     type: "select",
     options: [
-      { label: "Pending", value: "PENDING" },
-      { label: "In Transit", value: "IN_TRANSIT" },
-      { label: "Delivered", value: "DELIVERED" },
-      { label: "Cancelled", value: "CANCELLED" },
+      { label: "Draft", value: "Draft" },
+      { label: "Pending", value: "Pending" },
+      { label: "Paid", value: "Paid" },
+      { label: "Overdue", value: "Overdue" },
+      { label: "Cancelled", value: "Cancelled" },
     ],
+  },
+  {
+    name: "notes",
+    label: "Notes",
+    type: "textarea",
+    optional: true,
   },
 ];
 
@@ -410,9 +441,11 @@ export const INVOICE_FORM_FIELDS: FormField[] = [
     label: "Status",
     type: "select",
     options: [
-      { label: "Pending", value: "PENDING" },
-      { label: "Paid", value: "PAID" },
-      { label: "Cancelled", value: "CANCELLED" },
+      { label: "Draft", value: "Draft" },
+      { label: "Pending", value: "Pending" },
+      { label: "Paid", value: "Paid" },
+      { label: "Overdue", value: "Overdue" },
+      { label: "Cancelled", value: "Cancelled" },
     ],
   },
 ];
