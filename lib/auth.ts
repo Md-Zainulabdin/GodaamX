@@ -44,10 +44,14 @@ export async function setSession(token: string, user: AuthUser) {
 export async function getSession(): Promise<AuthSession> {
   const store = await cookies();
   const token = store.get(TOKEN_KEY)?.value;
-  const raw   = store.get(USER_KEY)?.value;
+  const raw = store.get(USER_KEY)?.value;
   if (!token || !raw) return null;
-  try { return { token, user: JSON.parse(raw), isAuthenticated: token && raw ? true : false }; } 
-  catch { return null; }
+  try {
+    const user: AuthUser = JSON.parse(raw);
+    return { token, user, isAuthenticated: true };
+  } catch {
+    return null;
+  }
 }
 
 /* =========================================================

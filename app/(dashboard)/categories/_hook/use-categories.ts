@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { apiClient } from "@/lib/axios";
+import { apiClient, type ApiError } from "@/lib/axios";
 import { Category } from "@/types/global";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -63,7 +63,7 @@ export function useCreateCategory() {
       toast.success("Category created successfully.");
       router.push("/categories");
     },
-    onError: (err: any) => {
+    onError: (err: ApiError) => {
       toast.error("Failed to create category", { description: err.message });
     },
   });
@@ -79,7 +79,7 @@ export function useUpdateCategory(id: string) {
 
   return useMutation({
     mutationFn: async (body: CategoryFormValues) => {
-      const res = await apiClient.patch<Category>(CATEGORY_API.patch(id), body);
+      const res = await apiClient.put<Category>(CATEGORY_API.put(id), body);
       return res.data;
     },
     onSuccess: () => {
@@ -88,7 +88,7 @@ export function useUpdateCategory(id: string) {
       toast.success("Category updated successfully.");
       router.push("/categories");
     },
-    onError: (err: any) => {
+    onError: (err: ApiError) => {
       toast.error("Failed to update category", { description: err.message });
     },
   });
@@ -110,7 +110,7 @@ export function useDeleteCategory() {
       queryClient.invalidateQueries({ queryKey: categoryKeys.all });
       toast.success("Category deleted.");
     },
-    onError: (err: any) => {
+    onError: (err: ApiError) => {
       toast.error("Failed to delete category", { description: err.message });
     },
   });

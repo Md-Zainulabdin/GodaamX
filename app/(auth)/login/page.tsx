@@ -1,10 +1,8 @@
 "use client";
 
-import * as React from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -20,7 +18,7 @@ import { AUTH_API } from "@/constants/api.constants";
 
 export default function Login() {
   const { save } = useAuth();
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -35,8 +33,9 @@ export default function Login() {
 
       save(res?.data?.access_token, res?.data?.user);
       toast("You have signed in successfully.");
-    } catch (err: any) {
-      toast(`Login failed: ${err.message}`);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : (err as { message?: string })?.message ?? "Unexpected error";
+      toast(`Login failed: ${message}`);
     }
   }
 

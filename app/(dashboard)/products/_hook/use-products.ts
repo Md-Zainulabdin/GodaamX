@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { apiClient } from "@/lib/axios";
+import { apiClient, type ApiError } from "@/lib/axios";
 import { Product } from "@/types/global";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -63,7 +63,7 @@ export function useCreateProduct() {
       toast.success("Product created successfully.");
       router.push("/products");
     },
-    onError: (err: any) => {
+    onError: (err: ApiError) => {
       toast.error("Failed to create product", { description: err.message });
     },
   });
@@ -79,7 +79,7 @@ export function useUpdateProduct(id: string) {
 
   return useMutation({
     mutationFn: async (body: ProductFormValues) => {
-      const res = await apiClient.patch<Product>(PRODUCT_API.patch(id), body);
+      const res = await apiClient.put<Product>(PRODUCT_API.put(id), body);
       return res.data;
     },
     onSuccess: () => {
@@ -88,7 +88,7 @@ export function useUpdateProduct(id: string) {
       toast.success("Product updated successfully.");
       router.push("/products");
     },
-    onError: (err: any) => {
+    onError: (err: ApiError) => {
       toast.error("Failed to update product", { description: err.message });
     },
   });
@@ -110,7 +110,7 @@ export function useDeleteProduct() {
       queryClient.invalidateQueries({ queryKey: productKeys.all });
       toast.success("Product deleted.");
     },
-    onError: (err: any) => {
+    onError: (err: ApiError) => {
       toast.error("Failed to delete product", { description: err.message });
     },
   });

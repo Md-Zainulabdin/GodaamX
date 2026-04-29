@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { DynamicForm } from "@/components/forms/dynamic-form";
 import { CATEGORY_FORM_FIELDS } from "@/constants/form.constants";
 import { categorySchema, CategoryFormValues } from "@/schemas/schemas";
@@ -26,6 +27,18 @@ export function CategoryForm(props: Props) {
       ?.filter((c) => c.category_id !== id)
       .map((c) => ({ label: c.category_name, value: String(c.category_id) })) ?? [];
 
+  const defaultValues = useMemo(
+    () =>
+      isEdit && category
+        ? {
+            category_name: category.category_name,
+            description: category.description ?? "",
+            parent_category_id: category.parent_category_id ?? null,
+          }
+        : undefined,
+    [isEdit, category?.category_id, category?.category_name, category?.description, category?.parent_category_id]
+  );
+
   function handleSubmit(data: CategoryFormValues) {
     isEdit ? updateCategory(data) : createCategory(data);
   }
@@ -41,15 +54,7 @@ export function CategoryForm(props: Props) {
       submitLabel={isEdit ? "Update Category" : "Create Category"}
       isLoading={isCreating || isUpdating}
       dynamicOptions={{ parent_category_id: parentOptions }}
-      defaultValues={
-        isEdit && category
-          ? {
-              category_name: category?.category_name,
-              description: category?.description ?? "",
-              parent_category_id: category?.parent_category_id ?? "",
-            }
-          : undefined
-      }
+      defaultValues={defaultValues}
     />
   );
 }

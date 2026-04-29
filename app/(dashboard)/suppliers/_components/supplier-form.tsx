@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { DynamicForm } from "@/components/forms/dynamic-form";
 import { SUPPLIER_FORM_FIELDS } from "@/constants/form.constants";
 import { supplierSchema, SupplierFormValues } from "@/schemas/schemas";
@@ -15,6 +16,20 @@ export function SupplierForm(props: Props) {
   const { mutate: createSupplier, isPending: isCreating } = useCreateSupplier();
   const { mutate: updateSupplier, isPending: isUpdating } = useUpdateSupplier(id);
 
+  const defaultValues = useMemo(
+    () =>
+      isEdit && supplier
+        ? {
+            supplier_name: supplier.supplier_name,
+            contact_email: supplier.contact_email,
+            contact_phone: supplier.contact_phone,
+            address: supplier.address,
+            status: supplier.status as "Active" | "Inactive",
+          }
+        : undefined,
+    [isEdit, supplier?.supplier_id, supplier?.supplier_name, supplier?.contact_email, supplier?.contact_phone, supplier?.address, supplier?.status]
+  );
+
   function handleSubmit(data: SupplierFormValues) {
     isEdit ? updateSupplier(data) : createSupplier(data);
   }
@@ -29,17 +44,7 @@ export function SupplierForm(props: Props) {
       onSubmit={handleSubmit}
       submitLabel={isEdit ? "Update Supplier" : "Create Supplier"}
       isLoading={isCreating || isUpdating}
-      defaultValues={
-        isEdit && supplier
-          ? {
-              supplier_name: supplier.supplier_name,
-              contact_email: supplier.contact_email,
-              contact_phone: supplier.contact_phone,
-              address: supplier.address,
-              status: supplier.status as "Active" | "Inactive",
-            }
-          : undefined
-      }
+      defaultValues={defaultValues}
     />
   );
 }

@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { apiClient } from "@/lib/axios";
+import { apiClient, type ApiError } from "@/lib/axios";
 import { Supplier } from "@/types/global";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -41,7 +41,7 @@ export function useSupplier(id: string) {
       const res = await apiClient.get<Supplier>(SUPPLIER_API.detail(id));
       return res.data;
     },
-    enabled: !!id, // don't fetch if id is empty
+    enabled: !!id,
   });
 }
 
@@ -64,7 +64,7 @@ export function useCreateSupplier() {
       router.push("/suppliers");
     },
 
-    onError: (err: any) => {
+    onError: (err: ApiError) => {
       toast.error("Failed to create supplier", { description: err.message });
     },
   });
@@ -79,8 +79,8 @@ export function useUpdateSupplier(id: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (body: Partial<Supplier>) => {
-      const res = await apiClient.patch<Supplier>(SUPPLIER_API.patch(id), body);
+    mutationFn: async (body: Partial<SupplierFormValues>) => {
+      const res = await apiClient.put<Supplier>(SUPPLIER_API.put(id), body);
       return res.data;
     },
     onSuccess: () => {
@@ -89,7 +89,7 @@ export function useUpdateSupplier(id: string) {
       toast.success("Supplier updated successfully.");
       router.push("/suppliers");
     },
-    onError: (err: any) => {
+    onError: (err: ApiError) => {
       toast.error("Failed to update supplier", { description: err.message });
     },
   });
@@ -111,7 +111,7 @@ export function useDeleteSupplier() {
       queryClient.invalidateQueries({ queryKey: supplierKeys.all });
       toast.success("Supplier deleted.");
     },
-    onError: (err: any) => {
+    onError: (err: ApiError) => {
       toast.error("Failed to delete supplier", { description: err.message });
     },
   });

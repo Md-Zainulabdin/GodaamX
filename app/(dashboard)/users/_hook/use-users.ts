@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { apiClient } from "@/lib/axios";
+import { apiClient, type ApiError } from "@/lib/axios";
 import { User } from "@/types/global";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -63,7 +63,7 @@ export function useCreateUser() {
       toast.success("User created successfully.");
       router.push("/users");
     },
-    onError: (err: any) => {
+    onError: (err: ApiError) => {
       toast.error("Failed to create user", { description: err.message });
     },
   });
@@ -88,7 +88,7 @@ export function useUpdateUser(id: string) {
       toast.success("User updated successfully.");
       router.push("/users");
     },
-    onError: (err: any) => {
+    onError: (err: ApiError) => {
       toast.error("Failed to update user", { description: err.message });
     },
   });
@@ -102,12 +102,15 @@ export function useDeleteUser() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => apiClient.delete(USER_API.delete(id)).then((r) => r.data),
+    mutationFn: async (id: string) => {
+      await apiClient.delete(USER_API.delete(id));
+      return id;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: userKeys.all });
       toast.success("User deleted.");
     },
-    onError: (err: any) => {
+    onError: (err: ApiError) => {
       toast.error("Failed to delete user", { description: err.message });
     },
   });

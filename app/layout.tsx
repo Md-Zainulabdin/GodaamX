@@ -9,8 +9,8 @@ import { Providers } from "@/components/providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: `${APP_TITLE}`,
-  description: `${APP_DESCRIPTION}`,
+  title: APP_TITLE,
+  description: APP_DESCRIPTION,
 };
 
 export default function RootLayout({

@@ -6,7 +6,8 @@ import { z } from "zod";
 
 export const loginSchema = z.object({
   email: z.email("Please enter a valid email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  // password: z.string().min(6, "Password must be at least 6 characters"), 
+  password: z.string(), // development only
 });
 
 export type LoginSchema = z.infer<typeof loginSchema>;
@@ -105,7 +106,7 @@ export const invoiceSchema = z.object({
   invoice_number: z.string().optional(),
   invoice_date: z.string().optional(),
   total_amount: z.number().positive("Amount must be a positive number").optional().nullable(),
-  status: z.enum(["PENDING", "PAID", "CANCELLED"], { message: "Please select a status" }),
+  status: z.enum(["Draft", "Pending", "Paid", "Overdue", "Cancelled"], { message: "Please select a status" }),
 });
 
 export type InvoiceFormValues = z.infer<typeof invoiceSchema>;
@@ -119,10 +120,15 @@ export const customerSchema = z.object({
 export type CustomerFormValues = z.infer<typeof customerSchema>;
 
 export const shipmentSchema = z.object({
-  po_id: z.string().uuid("Please select a purchase order"),
+  purchase_order_id: z.string().uuid("Please select a purchase order"),
   warehouse_id: z.string().uuid("Please select a warehouse").optional().nullable(),
+  carrier_name: z.string().optional(),
   tracking_number: z.string().optional(),
-  status: z.enum(["PENDING", "IN_TRANSIT", "DELIVERED", "CANCELLED"], { message: "Please select a status" }),
+  shipment_date: z.string().optional(),
+  estimated_arrival: z.string().optional(),
+  actual_arrival: z.string().optional(),
+  status: z.enum(["Draft", "Pending", "Paid", "Overdue", "Cancelled"], { message: "Please select a status" }),
+  notes: z.string().optional(),
 });
 
 export type ShipmentFormValues = z.infer<typeof shipmentSchema>;

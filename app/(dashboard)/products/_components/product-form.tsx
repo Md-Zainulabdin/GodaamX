@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { DynamicForm } from "@/components/forms/dynamic-form";
 import { PRODUCT_FORM_FIELDS } from "@/constants/form.constants";
 import { productSchema, ProductFormValues } from "@/schemas/schemas";
@@ -31,6 +32,36 @@ export function ProductForm(props: Props) {
       value: String(s.supplier_id),
     })) ?? [];
 
+  const defaultValues = useMemo(
+    () =>
+      isEdit && product
+        ? {
+            product_name: product.product_name,
+            sku: product.sku ?? undefined,
+            description: product.description ?? undefined,
+            category_id: product.category_id ? String(product.category_id) : undefined,
+            supplier_id: product.supplier_id ? String(product.supplier_id) : undefined,
+            price: product.price ?? undefined,
+            cost_price: product.cost_price ?? undefined,
+            weight: product.weight ?? undefined,
+            status: product.status as "Active" | "Inactive",
+          }
+        : undefined,
+    [
+      isEdit,
+      product?.product_id,
+      product?.product_name,
+      product?.sku,
+      product?.description,
+      product?.category_id,
+      product?.supplier_id,
+      product?.price,
+      product?.cost_price,
+      product?.weight,
+      product?.status,
+    ]
+  );
+
   function handleSubmit(data: ProductFormValues) {
     isEdit ? updateProduct(data) : createProduct(data);
   }
@@ -46,21 +77,7 @@ export function ProductForm(props: Props) {
       submitLabel={isEdit ? "Update Product" : "Create Product"}
       isLoading={isCreating || isUpdating}
       dynamicOptions={{ category_id: categoryOptions, supplier_id: supplierOptions }}
-      defaultValues={
-        isEdit && product
-          ? {
-              product_name: product.product_name,
-              sku: product.sku ?? undefined,
-              description: product.description ?? undefined,
-              category_id: product.category_id ? String(product.category_id) : undefined,
-              supplier_id: product.supplier_id ? String(product.supplier_id) : undefined,
-              price: product.price ?? undefined,
-              cost_price: product.cost_price ?? undefined,
-              weight: product.weight ?? undefined,
-              status: product.status as "Active" | "Inactive",
-            }
-          : undefined
-      }
+      defaultValues={defaultValues}
     />
   );
 }

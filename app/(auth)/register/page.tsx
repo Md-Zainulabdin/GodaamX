@@ -31,8 +31,9 @@ export default function Register() {
         toast("Registration Successfull.");
         router.push("/login");
       }
-    } catch (err: any) {
-      toast(`Registration failed: ${err.message}`);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : (err as { message?: string })?.message ?? "Unexpected error";
+      toast(`Registration failed: ${message}`);
     }
   }
 
@@ -44,7 +45,7 @@ export default function Register() {
           <CardDescription>Enter your details to complete registration.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form id="login-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form id="register-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="name">Name</FieldLabel>

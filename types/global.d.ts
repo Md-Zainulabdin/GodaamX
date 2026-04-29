@@ -80,7 +80,6 @@ export interface Warehouse extends BaseEntity {
   city?: string;
   capacity?: number;
   phone?: string;
-  manager_id?: UUID;
   is_active?: boolean;
 }
 
@@ -170,7 +169,7 @@ export interface Customer extends BaseEntity {
 
 export interface Shipment extends BaseEntity {
   shipment_id: UUID;
-  po_id: UUID;
+  purchase_order_id: UUID;
   warehouse_id?: UUID;
   carrier_name?: string;
   tracking_number?: string;
