@@ -79,7 +79,7 @@ export function useUpdateUser(id: string) {
 
   return useMutation({
     mutationFn: async (body: UserFormValues) => {
-      const res = await apiClient.patch<User>(USER_API.patch(id), body);
+      const res = await apiClient.put<User>(USER_API.put(id), body);
       return res.data;
     },
     onSuccess: () => {
