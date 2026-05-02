@@ -3,7 +3,7 @@
    Sidebar + Page Titles
    ========================================================= */
 
-import { LayoutDashboard, Users, Truck, Package, Boxes, Warehouse, ShoppingCart, FileText, User } from "lucide-react";
+import { LayoutDashboard, Users, Truck, Package, Boxes, Warehouse, ShoppingCart, FileText, User, CheckSquare } from "lucide-react";
 
 /* =========================================================
    APP META DATA
@@ -17,19 +17,29 @@ export const APP_DESCRIPTION =
    SIDEBAR
    ========================================================= */
 
-export const SIDEBAR_ITEMS = [
+export type SidebarItem = {
+  id: string;
+  label: string;
+  href: string;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+  roles?: string[]; // If empty, visible to all users
+};
+
+export const SIDEBAR_ITEMS: SidebarItem[] = [
   {
     id: "dashboard",
     label: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
+    // No roles = visible to all
   },
 
   {
-    id: "suppliers",
-    label: "Suppliers",
-    href: "/suppliers",
-    icon: Truck,
+    id: "registration_requests",
+    label: "Registration Requests",
+    href: "/registration-requests",
+    icon: CheckSquare,
+    roles: ["SUPERADMIN"],
   },
 
   {
@@ -37,6 +47,15 @@ export const SIDEBAR_ITEMS = [
     label: "Users",
     href: "/users",
     icon: Users,
+    roles: ["SUPERADMIN"],
+  },
+
+  {
+    id: "suppliers",
+    label: "Suppliers",
+    href: "/suppliers",
+    icon: Truck,
+    roles: ["SUPPLIER"],
   },
 
   {
@@ -44,6 +63,7 @@ export const SIDEBAR_ITEMS = [
     label: "Categories",
     href: "/categories",
     icon: Boxes,
+    roles: ["SUPPLIER"],
   },
 
   {
@@ -51,6 +71,7 @@ export const SIDEBAR_ITEMS = [
     label: "Products",
     href: "/products",
     icon: Package,
+    roles: ["SUPPLIER"],
   },
 
   {
@@ -58,6 +79,7 @@ export const SIDEBAR_ITEMS = [
     label: "Warehouses",
     href: "/warehouses",
     icon: Warehouse,
+    roles: ["SUPPLIER"],
   },
 
   {
@@ -65,6 +87,7 @@ export const SIDEBAR_ITEMS = [
     label: "Inventory",
     href: "/inventory",
     icon: Boxes,
+    roles: ["SUPPLIER"],
   },
 
   {
@@ -72,6 +95,15 @@ export const SIDEBAR_ITEMS = [
     label: "Purchase Orders",
     href: "/purchase-orders",
     icon: ShoppingCart,
+    roles: ["SUPPLIER"],
+  },
+
+  {
+    id: "purchase_order_items",
+    label: "Purchase Order Items",
+    href: "/purchase-order-items",
+    icon: ShoppingCart,
+    roles: ["SUPPLIER"],
   },
 
   {
@@ -79,6 +111,15 @@ export const SIDEBAR_ITEMS = [
     label: "Invoices",
     href: "/invoices",
     icon: FileText,
+    roles: ["SUPPLIER"],
+  },
+
+  {
+    id: "invoice_items",
+    label: "Invoice Items",
+    href: "/invoice-items",
+    icon: FileText,
+    roles: ["SUPPLIER"],
   },
 
   {
@@ -86,6 +127,7 @@ export const SIDEBAR_ITEMS = [
     label: "Customers",
     href: "/customers",
     icon: User,
+    roles: ["SUPPLIER"],
   },
 
   {
@@ -93,6 +135,7 @@ export const SIDEBAR_ITEMS = [
     label: "Shipments",
     href: "/shipments",
     icon: Truck,
+    roles: ["SUPPLIER"],
   },
 ];
 
@@ -102,6 +145,7 @@ export const SIDEBAR_ITEMS = [
 
 export const PAGE_TITLES: Record<string, string> = {
   "/dashboard": "Dashboard",
+  "/registration-requests": "Registration Requests",
   "/suppliers": "Suppliers",
   "/users": "Users",
   "/categories": "Categories",
@@ -109,7 +153,9 @@ export const PAGE_TITLES: Record<string, string> = {
   "/warehouses": "Warehouses",
   "/inventory": "Inventory",
   "/purchase-orders": "Purchase Orders",
+  "/purchase-order-items": "Purchase Order Items",
   "/invoices": "Invoices",
+  "/invoice-items": "Invoice Items",
   "/customers": "Customers",
   "/shipments": "Shipments",
 };

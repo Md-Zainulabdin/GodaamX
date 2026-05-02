@@ -98,7 +98,7 @@ export const SUPPLIER_COLUMNS: TableColumn[] = [
 export const CATEGORY_COLUMNS: TableColumn[] = [
   { accessorKey: "category_name", header: "Category Name" },
   { accessorKey: "description", header: "Description" },
-  { accessorKey: "parent_category_name", header: "Parent Category" },
+  { accessorKey: "parent_category_id", header: "Parent Category" },
   { accessorKey: "created_at", header: "Created At", cell: dateCell },
 ];
 
@@ -150,7 +150,7 @@ export const INVENTORY_COLUMNS: TableColumn[] = [
 export const PURCHASE_ORDER_COLUMNS: TableColumn[] = [
   { accessorKey: "order_number", header: "Order Number" },
   { accessorKey: "supplier_id", header: "Supplier" },
-  { accessorKey: "warehouse_id", header: "Warehouse" }, 
+  { accessorKey: "warehouse_id", header: "Warehouse" },
   { accessorKey: "order_date", header: "Order Date", cell: dateCell },
   { accessorKey: "expected_delivery", header: "Expected Delivery", cell: dateCell },
   { accessorKey: "total_amount", header: "Total Amount", cell: currencyCell },
@@ -162,6 +162,7 @@ export const PURCHASE_ORDER_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const PURCHASE_ORDER_ITEM_COLUMNS: TableColumn[] = [
+  { accessorKey: "po_id", header: "PO ID" },
   { accessorKey: "product_id", header: "Product" },
   { accessorKey: "quantity", header: "Quantity" },
   { accessorKey: "price", header: "Price", cell: currencyCell },
@@ -185,6 +186,7 @@ export const INVOICE_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const INVOICE_ITEM_COLUMNS: TableColumn[] = [
+  { accessorKey: "invoice_id", header: "Invoice ID" },
   { accessorKey: "product_id", header: "Product" },
   { accessorKey: "quantity", header: "Quantity" },
   { accessorKey: "price", header: "Price", cell: currencyCell },
@@ -216,4 +218,18 @@ export const SHIPMENT_COLUMNS: TableColumn[] = [
   { accessorKey: "estimated_arrival", header: "Estimated Arrival", cell: dateCell },
   { accessorKey: "actual_arrival", header: "Actual Arrival", cell: dateCell },
   { accessorKey: "status", header: "Status", cell: statusBadge },
+];
+
+/* =========================================================
+   REGISTRATION REQUESTS TABLE
+   ========================================================= */
+
+export const REGISTRATION_REQUEST_COLUMNS: TableColumn[] = [
+  { accessorKey: "name", header: "Name" },
+  { accessorKey: "email", header: "Email" },
+  { accessorKey: "phone", header: "Phone" },
+  { accessorKey: "company_name", header: "Company Name" },
+  { accessorKey: "message", header: "Message" },
+  { accessorKey: "status", header: "Status", cell: statusBadge },
+  { accessorKey: "created_at", header: "Submitted At", cell: dateCell },
 ];

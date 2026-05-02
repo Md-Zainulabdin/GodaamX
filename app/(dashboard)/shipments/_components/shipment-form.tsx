@@ -29,6 +29,8 @@ export function ShipmentForm(props: Props) {
       label: po.order_number || `Order ${po.po_id.slice(0, 8)}`,
       value: po.po_id,
     })) ?? [];
+
+
   const warehouseOptions =
     warehouses?.map((w) => ({ label: w.warehouse_name, value: w.warehouse_id })) ?? [];
 
@@ -37,8 +39,12 @@ export function ShipmentForm(props: Props) {
       isEdit && shipment
         ? {
           purchase_order_id: shipment.purchase_order_id,
-          warehouse_id: shipment.warehouse_id ?? null,
+          carrier_name: shipment.carrier_name ?? "",
           tracking_number: shipment.tracking_number ?? "",
+          shipment_date: shipment.shipment_date ? new Date(shipment.shipment_date).toISOString().split("T")[0] : "",
+          estimated_arrival: shipment.estimated_arrival ? new Date(shipment.estimated_arrival).toISOString().split("T")[0] : "",
+          actual_arrival: shipment.actual_arrival ? new Date(shipment.actual_arrival).toISOString().split("T")[0] : "",
+          warehouse_id: shipment.warehouse_id ?? null,
           status: shipment.status as any,
         }
         : undefined,

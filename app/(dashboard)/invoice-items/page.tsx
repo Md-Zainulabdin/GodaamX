@@ -13,9 +13,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { PAGE_TITLES } from "@/constants/constants";
 
-import { CustomerTable } from "./_components/customer-table";
+import { InvoiceItemTable } from "./_components/invoice-item-table";
 
-const CustomersPage = () => {
+const InvoiceItemsPage = () => {
   const pathname = usePathname();
 
   return (
@@ -28,25 +28,25 @@ const CustomersPage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="#">Customers</BreadcrumbLink>
+            <BreadcrumbLink href="#">Invoice Items</BreadcrumbLink>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
       {/* Page Title */}
-      <div className="my-8 flex w-full items-center justify-between">
+      <div className="my-8 w-full flex items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">{PAGE_TITLES[pathname]}</h1>
         <Button asChild>
-          <Link href={"/customers/create"}>Add Customer</Link>
+          <Link href={"/invoice-items/create"}>Add Invoice Item</Link>
         </Button>
       </div>
 
-      {/* Customer Table */}
+      {/* Invoice Item Table */}
       <div>
-        <CustomerTable />
+        <InvoiceItemTable />
       </div>
     </div>
   );
 };
 
-export default CustomersPage;
+export default InvoiceItemsPage;

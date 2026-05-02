@@ -288,6 +288,11 @@ export const CUSTOMER_FORM_FIELDS: FormField[] = [
     label: "Customer Name",
   },
   {
+    name: "contact_person",
+    label: "Contact Person",
+    optional: true,
+  },
+  {
     name: "phone",
     label: "Phone",
     type: "tel",
@@ -298,6 +303,21 @@ export const CUSTOMER_FORM_FIELDS: FormField[] = [
     label: "Email",
     type: "email",
     optional: true,
+  },
+  {
+    name: "address",
+    label: "Address",
+    type: "textarea",
+    optional: true,
+  },
+  {
+    name: "customer_type",
+    label: "Customer Type",
+    type: "select",
+    options: [
+      { label: "Business", value: "Business" },
+      { label: "Individual", value: "Individual" },
+    ],
   },
 ];
 
@@ -447,5 +467,59 @@ export const INVOICE_FORM_FIELDS: FormField[] = [
       { label: "Overdue", value: "Overdue" },
       { label: "Cancelled", value: "Cancelled" },
     ],
+  },
+];
+
+/* =========================================================
+   PURCHASE ORDER ITEM (POI) FORM
+   ========================================================= */
+
+export const POI_FORM_FIELDS: FormField[] = [
+  {
+    name: "po_id",
+    label: "Purchase Order",
+    type: "select",
+  },
+  {
+    name: "product_id",
+    label: "Product",
+    type: "select",
+  },
+  {
+    name: "quantity",
+    label: "Quantity",
+    type: "number",
+  },
+  {
+    name: "price",
+    label: "Price",
+    type: "number",
+  },
+];
+
+/* =========================================================
+   INVOICE ITEM FORM
+   ========================================================= */
+
+export const INVOICE_ITEM_FORM_FIELDS: FormField[] = [
+  {
+    name: "invoice_id",
+    label: "Invoice",
+    type: "select",
+  },
+  {
+    name: "product_id",
+    label: "Product",
+    type: "select",
+  },
+  {
+    name: "quantity",
+    label: "Quantity",
+    type: "number",
+  },
+  {
+    name: "price",
+    label: "Price",
+    type: "number",
   },
 ];

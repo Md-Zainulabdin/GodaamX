@@ -23,6 +23,16 @@ export const AUTH_API = {
 };
 
 /* =========================================================
+   REGISTRATION REQUESTS (ADMIN)
+   ========================================================= */
+
+export const REGISTRATION_REQUEST_API = {
+   list: api("/admin/registration-requests"),
+   approve: (requestId: string) => api(`/admin/registration-requests/${requestId}/approve`),
+   reject: (requestId: string) => api(`/admin/registration-requests/${requestId}/reject`),
+};
+
+/* =========================================================
    SUPPLIERS
    ========================================================= */
 
@@ -115,18 +125,18 @@ export const PURCHASE_ORDER_API = {
    detail: (id: string) => api(`/purchase-order/${id}`),
    update: (id: string) => api(`/purchase-order/${id}`),
    delete: (id: string) => api(`/purchase-order/${id}`),
-
-   items: (poId: string) => api(`/purchase-order/${poId}/items`),
 };
 
 /* =========================================================
-   PURCHASE ORDER ITEMS
+   PURCHASE ORDER ITEMS (POI)
    ========================================================= */
 
-export const PURCHASE_ORDER_ITEM_API = {
-   create: api("/purchase-order-items"),
-   update: (id: string) => api(`/purchase-order-items/${id}`),
-   delete: (id: string) => api(`/purchase-order-items/${id}`),
+export const POI_API = {
+   list: (poId: string) => api(`/poi/${poId}/items`),
+   create: (poId: string) => api(`/poi/${poId}/items`),
+   detail: (poId: string, itemId: string) => api(`/poi/${poId}/items/${itemId}`),
+   update: (poId: string, itemId: string) => api(`/poi/${poId}/items/${itemId}`),
+   delete: (poId: string, itemId: string) => api(`/poi/${poId}/items/${itemId}`),
 };
 
 /* =========================================================
@@ -148,7 +158,9 @@ export const INVOICE_API = {
    ========================================================= */
 
 export const INVOICE_ITEM_API = {
+   list: api("/invoice-items"),
    create: api("/invoice-items"),
+   detail: (id: string) => api(`/invoice-items/${id}`),
    update: (id: string) => api(`/invoice-items/${id}`),
    delete: (id: string) => api(`/invoice-items/${id}`),
 };
@@ -177,4 +189,21 @@ export const SHIPMENT_API = {
    delete: (id: string) => api(`/shipments/${id}`),
 
    byPurchaseOrder: (poId: string) => api(`/shipments/purchase-order/${poId}`),
+};
+
+/* =========================================================
+   CHAT
+   ========================================================= */
+
+export const CHAT_API = {
+   sendMessage: api("/chat/message"),
+};
+
+/* =========================================================
+   SPEECH
+   ========================================================= */
+
+export const SPEECH_API = {
+   transcribe: api("/speech/transcribe"),
+   synthesize: api("/speech/synthesize"),
 };

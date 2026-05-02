@@ -113,11 +113,32 @@ export type InvoiceFormValues = z.infer<typeof invoiceSchema>;
 
 export const customerSchema = z.object({
   customer_name: z.string().min(2, "Customer name must be at least 2 characters"),
-  phone: z.string().optional(),
+  contact_person: z.string().min(2, "Contact person must be at least 2 characters").optional().or(z.literal("")),
   email: z.string().email("Please enter a valid email").optional().or(z.literal("")),
+  phone: z.string().min(7, "Phone number must be at least 7 digits").optional().or(z.literal("")),
+  address: z.string().optional(),
+  customer_type: z.enum(["Business", "Individual"], { message: "Please select a customer type" }),
 });
 
 export type CustomerFormValues = z.infer<typeof customerSchema>;
+
+export const purchaseOrderItemSchema = z.object({
+  po_id: z.string().uuid("Please select a purchase order"),
+  product_id: z.string().uuid("Please select a product"),
+  quantity: z.number().positive("Quantity must be a positive number"),
+  price: z.number().positive("Price must be a positive number"),
+});
+
+export type PurchaseOrderItemFormValues = z.infer<typeof purchaseOrderItemSchema>;
+
+export const invoiceItemSchema = z.object({
+  invoice_id: z.string().uuid("Please select an invoice"),
+  product_id: z.string().uuid("Please select a product"),
+  quantity: z.number().positive("Quantity must be a positive number"),
+  price: z.number().positive("Price must be a positive number"),
+});
+
+export type InvoiceItemFormValues = z.infer<typeof invoiceItemSchema>;
 
 export const shipmentSchema = z.object({
   purchase_order_id: z.string().uuid("Please select a purchase order"),
