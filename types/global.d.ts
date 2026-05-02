@@ -14,6 +14,32 @@ export type BaseEntity = {
 };
 
 /* =========================================================
+   REGISTRATION REQUESTS
+   ========================================================= */
+
+export interface RegistrationRequest {
+  request_id: UUID;
+  name: string;
+  email: string;
+  phone: string;
+  company_name: string;
+  message: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  created_at: Timestamp;
+}
+
+/* =========================================================
+   CHAT MESSAGES
+   ========================================================= */
+
+export interface ChatMessage {
+  id: string;
+  content: string;
+  role: "user" | "assistant";
+  timestamp: Timestamp;
+}
+
+/* =========================================================
    USERS
    ========================================================= */
 
@@ -176,5 +202,5 @@ export interface Shipment extends BaseEntity {
   shipment_date?: string;
   estimated_arrival?: string;
   actual_arrival?: string | null;
-  status?: string;
+  status?: ShipmentStatus;
 }

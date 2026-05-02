@@ -5,14 +5,24 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/compone
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { SIDEBAR_ITEMS } from "@/constants/constants";
+import { useAuth } from "@/hooks/use-auth";
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { session } = useAuth();
+  const userRole = session?.user?.role;
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === "/dashboard";
     return pathname.startsWith(href);
   };
+
+  const visibleItems = SIDEBAR_ITEMS.filter((item) => {
+    if (!item.roles || item.roles.length === 0) {
+      return true;
+    }
+    return userRole && item.roles.includes(userRole);
+  });
 
   return (
     <Sidebar>
@@ -33,7 +43,7 @@ export function AppSidebar() {
         <section className="space-y-1">
           <h3 className="mb-2 px-3 text-[10px] font-bold tracking-widest text-zinc-400 uppercase">Main Menu</h3>
           <nav className="space-y-2">
-            {SIDEBAR_ITEMS.map((item) => {
+            {visibleItems.map((item) => {
               const active = isActive(item.href);
               const Icon = item.icon;
               return (
@@ -46,13 +56,7 @@ export function AppSidebar() {
                   )}
                 >
                   <div className="flex items-center gap-2.5">
-                    <Icon
-                      size={16}
-                      className={cn(
-                        "shrink-0 transition-colors",
-                        active ? "text-zinc-900" : "text-zinc-400 group-hover:text-zinc-600",
-                      )}
-                    />
+                    <Icon size={16} className={"shrink-0 transition-colors"} />
                     {item.label}
                   </div>
                   {active && <div className="size-1 shrink-0 rounded-full bg-zinc-900" />}
