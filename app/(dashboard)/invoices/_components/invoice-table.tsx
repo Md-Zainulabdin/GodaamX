@@ -6,7 +6,7 @@ import { useInvoices, useDeleteInvoice } from "@/app/(dashboard)/invoices/_hook/
 import { Invoice } from "@/types/global";
 
 export function InvoiceTable() {
-  const { data: invoices } = useInvoices();
+  const { data: invoices, isLoading } = useInvoices();
   const { mutate: deleteInvoice, isPending: isDeleting } = useDeleteInvoice();
 
   const columns = [
@@ -19,5 +19,5 @@ export function InvoiceTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={invoices ?? []} />;
+  return <DataTable columns={columns} data={invoices ?? []} isLoading={isLoading} />;
 }

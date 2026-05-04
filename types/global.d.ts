@@ -73,9 +73,15 @@ export interface Supplier extends BaseEntity {
 
 export interface Category extends BaseEntity {
   category_id: UUID;
+  user_id?: UUID;
   category_name: string;
   description?: string;
   parent_category_id?: UUID | null;
+  parent_category?: {
+    category_id: string;
+    category_name: string;
+    description: string;
+  } | null;
 }
 
 /* =========================================================
@@ -85,14 +91,26 @@ export interface Category extends BaseEntity {
 export interface Product extends BaseEntity {
   product_id: UUID;
   supplier_id: UUID;
+  user_id?: UUID;
   category_id?: UUID | null;
   product_name: string;
   description?: string;
   sku?: string;
-  price?: number;
-  cost_price?: number;
-  weight?: number;
+  price?: number | string;
+  cost_price?: number | string;
+  weight?: number | string;
   status: string;
+  supplier?: {
+    supplier_id: string;
+    supplier_name: string;
+    contact_email: string;
+    contact_phone: string;
+  } | null;
+  category?: {
+    category_id: string;
+    category_name: string;
+    description: string;
+  } | null;
 }
 
 /* =========================================================
@@ -115,11 +133,24 @@ export interface Warehouse extends BaseEntity {
 
 export interface Inventory extends BaseEntity {
   inventory_id: UUID;
+  user_id?: UUID;
   product_id: UUID;
   warehouse_id: UUID;
   quantity: number;
   reorder_level?: number;
   last_restocked?: Timestamp;
+  product?: {
+    product_id: string;
+    product_name: string;
+    sku: string;
+    price: string;
+  } | null;
+  warehouse?: {
+    warehouse_id: string;
+    warehouse_name: string;
+    location: string;
+    city: string;
+  } | null;
 }
 
 /* =========================================================
@@ -129,12 +160,25 @@ export interface Inventory extends BaseEntity {
 export interface PurchaseOrder extends BaseEntity {
   po_id: UUID;
   supplier_id: UUID;
+  user_id?: UUID;
   warehouse_id?: UUID;
   order_number?: string;
   order_date?: string;
   expected_delivery?: string;
-  total_amount?: number;
+  total_amount?: number | string;
   status?: string;
+  supplier?: {
+    supplier_id: string;
+    supplier_name: string;
+    contact_email: string;
+    contact_phone: string;
+  } | null;
+  warehouse?: {
+    warehouse_id: string;
+    warehouse_name: string;
+    location: string;
+    city: string;
+  } | null;
 }
 
 /* =========================================================
@@ -145,8 +189,21 @@ export interface PurchaseOrderItem extends BaseEntity {
   po_item_id: UUID;
   po_id: UUID;
   product_id: UUID;
+  user_id?: UUID;
   quantity: number;
-  price: number;
+  price: number | string;
+  purchase_order?: {
+    po_id: string;
+    order_number: string;
+    order_date: string;
+    status: string;
+  } | null;
+  product?: {
+    product_id: string;
+    product_name: string;
+    sku: string;
+    price: string;
+  } | null;
 }
 
 /* =========================================================
@@ -156,11 +213,24 @@ export interface PurchaseOrderItem extends BaseEntity {
 export interface Invoice extends BaseEntity {
   invoice_id: UUID;
   supplier_id: UUID;
+  user_id?: UUID;
   po_id?: UUID;
   invoice_number?: string;
   invoice_date?: string;
-  total_amount?: number;
+  total_amount?: number | string;
   status?: string;
+  supplier?: {
+    supplier_id: string;
+    supplier_name: string;
+    contact_email: string;
+    contact_phone: string;
+  } | null;
+  purchase_order?: {
+    po_id: string;
+    order_number: string;
+    order_date: string;
+    status: string;
+  } | null;
 }
 
 /* =========================================================
@@ -171,8 +241,22 @@ export interface InvoiceItem extends BaseEntity {
   invoice_item_id: UUID;
   invoice_id: UUID;
   product_id: UUID;
+  user_id?: UUID;
   quantity: number;
-  price: number;
+  price: number | string;
+  invoice?: {
+    invoice_id: string;
+    invoice_number: string;
+    invoice_date: string;
+    total_amount: string;
+    status: string;
+  } | null;
+  product?: {
+    product_id: string;
+    product_name: string;
+    sku: string;
+    price: string;
+  } | null;
 }
 
 /* =========================================================
@@ -195,12 +279,63 @@ export interface Customer extends BaseEntity {
 
 export interface Shipment extends BaseEntity {
   shipment_id: UUID;
-  purchase_order_id: UUID;
+  po_id: UUID;
+  user_id?: UUID;
   warehouse_id?: UUID;
   carrier_name?: string;
   tracking_number?: string;
   shipment_date?: string;
   estimated_arrival?: string;
   actual_arrival?: string | null;
-  status?: ShipmentStatus;
+  status?: string;
+  notes?: string;
+  purchase_order?: {
+    po_id: string;
+    order_number: string;
+    order_date: string;
+    status: string;
+    supplier_id: string;
+  } | null;
+  warehouse?: {
+    warehouse_id: string;
+    warehouse_name: string;
+    location: string;
+    city: string;
+  } | null;
+}
+
+/* =========================================================
+   DASHBOARD / ANALYTICS
+   ========================================================= */
+
+export type DashboardData = SuperAdminDashboard | SupplierDashboard;
+
+export interface SuperAdminDashboard {
+  role: "SUPERADMIN";
+  cards: {
+    revenue: number | string;
+    orders: number;
+    suppliers: number;
+    low_stock: number;
+  };
+  charts: {
+    revenue_trend: { month: string; revenue: number }[];
+    order_status: { status: string; count: number }[];
+    top_suppliers: { supplier: string; orders: number }[];
+  };
+}
+
+export interface SupplierDashboard {
+  role: "SUPPLIER";
+  cards: {
+    revenue: number | string;
+    orders: number;
+    pending_orders: number;
+    low_stock: number;
+  };
+  charts: {
+    sales_trend: { month: string; sales: number }[];
+    order_status: { status: string; count: number }[];
+    top_products: { product: string; quantity: number }[];
+  };
 }

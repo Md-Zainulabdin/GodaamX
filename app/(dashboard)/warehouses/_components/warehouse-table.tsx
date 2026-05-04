@@ -6,7 +6,7 @@ import { useWarehouses, useDeleteWarehouse } from "@/app/(dashboard)/warehouses/
 import { Warehouse } from "@/types/global";
 
 export function WarehouseTable() {
-  const { data: warehouses } = useWarehouses();
+  const { data: warehouses, isLoading } = useWarehouses();
   const { mutate: deleteWarehouse, isPending: isDeleting } = useDeleteWarehouse();
 
   const columns = [
@@ -19,5 +19,5 @@ export function WarehouseTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={warehouses ?? []} />;
+  return <DataTable columns={columns} data={warehouses ?? []} isLoading={isLoading} />;
 }

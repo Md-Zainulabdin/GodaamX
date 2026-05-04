@@ -141,7 +141,7 @@ export const invoiceItemSchema = z.object({
 export type InvoiceItemFormValues = z.infer<typeof invoiceItemSchema>;
 
 export const shipmentSchema = z.object({
-  purchase_order_id: z.string().uuid("Please select a purchase order"),
+  po_id: z.string().uuid("Please select a purchase order"),
   warehouse_id: z.string().uuid("Please select a warehouse").optional().nullable(),
   carrier_name: z.string().optional(),
   tracking_number: z.string().optional(),

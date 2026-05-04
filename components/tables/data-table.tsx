@@ -2,15 +2,17 @@
 
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type DataTableProps<TData> = {
   columns: ColumnDef<TData>[];
   data: TData[];
+  isLoading?: boolean;
 };
 
-export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
+export function DataTable<TData>({ columns, data, isLoading }: DataTableProps<TData>) {
   const table = useReactTable({
-    data,
+    data: isLoading ? [] : data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -29,7 +31,17 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
         </TableHeader>
 
         <TableBody>
-          {table.getRowModel().rows.length > 0 ? (
+          {isLoading ? (
+            Array.from({ length: 3 }).map((_, i) => (
+              <TableRow key={i}>
+                {columns.map((_, j) => (
+                  <TableCell key={j}>
+                    <Skeleton className="h-6 w-full" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : table.getRowModel().rows.length > 0 ? (
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (

@@ -38,7 +38,7 @@ export function ShipmentForm(props: Props) {
     () =>
       isEdit && shipment
         ? {
-          purchase_order_id: shipment.purchase_order_id,
+          po_id: shipment.po_id,
           carrier_name: shipment.carrier_name ?? "",
           tracking_number: shipment.tracking_number ?? "",
           shipment_date: shipment.shipment_date ? new Date(shipment.shipment_date).toISOString().split("T")[0] : "",
@@ -48,7 +48,7 @@ export function ShipmentForm(props: Props) {
           status: shipment.status as any,
         }
         : undefined,
-    [isEdit, shipment?.shipment_id, shipment?.purchase_order_id, shipment?.warehouse_id, shipment?.tracking_number, shipment?.status]
+    [isEdit, shipment?.shipment_id, shipment?.po_id, shipment?.warehouse_id, shipment?.tracking_number, shipment?.status]
   );
 
   function handleSubmit(data: ShipmentFormValues) {
@@ -66,7 +66,7 @@ export function ShipmentForm(props: Props) {
       submitLabel={isEdit ? "Update Shipment" : "Create Shipment"}
       isLoading={isCreating || isUpdating}
       dynamicOptions={{
-        purchase_order_id: poOptions,
+        po_id: poOptions,
         warehouse_id: warehouseOptions,
       }}
       defaultValues={defaultValues}

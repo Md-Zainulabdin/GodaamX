@@ -7,7 +7,7 @@ import { usePOI, useDeletePOI } from "@/app/(dashboard)/purchase-order-items/_ho
 import { PurchaseOrderItem } from "@/types/global";
 
 export function POITable({ poId }: { poId: string }) {
-  const { data: items } = usePOI(poId);
+  const { data: items, isLoading } = usePOI(poId);
   const { mutate: deleteItem, isPending: isDeleting } = useDeletePOI(poId);
 
   const columns = [
@@ -26,5 +26,5 @@ export function POITable({ poId }: { poId: string }) {
     },
   ];
 
-  return <DataTable columns={columns} data={items ?? []} />;
+  return <DataTable columns={columns} data={items ?? []} isLoading={isLoading} />;
 }

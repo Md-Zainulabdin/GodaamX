@@ -6,7 +6,7 @@ import { useCategories, useDeleteCategory } from "@/app/(dashboard)/categories/_
 import { Category } from "@/types/global";
 
 export function CategoryTable() {
-  const { data: categories } = useCategories();
+  const { data: categories, isLoading } = useCategories();
   const { mutate: deleteCategory, isPending: isDeleting } = useDeleteCategory();
 
   const columns = [
@@ -19,5 +19,5 @@ export function CategoryTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={categories ?? []} />;
+  return <DataTable columns={columns} data={categories ?? []} isLoading={isLoading} />;
 }

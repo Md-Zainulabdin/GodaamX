@@ -6,7 +6,7 @@ import { usePurchaseOrders, useDeletePurchaseOrder } from "@/app/(dashboard)/pur
 import { PurchaseOrder } from "@/types/global";
 
 export function PurchaseOrderTable() {
-  const { data: purchaseOrders } = usePurchaseOrders();
+  const { data: purchaseOrders, isLoading } = usePurchaseOrders();
   const { mutate: deletePurchaseOrder, isPending: isDeleting } = useDeletePurchaseOrder();
 
   const columns = [
@@ -19,5 +19,5 @@ export function PurchaseOrderTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={purchaseOrders ?? []} />;
+  return <DataTable columns={columns} data={purchaseOrders ?? []} isLoading={isLoading} />;
 }

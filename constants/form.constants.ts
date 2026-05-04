@@ -362,7 +362,7 @@ export const INVENTORY_FORM_FIELDS: FormField[] = [
 
 export const SHIPMENT_FORM_FIELDS: FormField[] = [
   {
-    name: "purchase_order_id",
+    name: "po_id",
     label: "Purchase Order",
     type: "select",
   },

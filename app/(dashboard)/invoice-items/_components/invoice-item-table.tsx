@@ -6,7 +6,7 @@ import { useInvoiceItems, useDeleteInvoiceItem } from "@/app/(dashboard)/invoice
 import { InvoiceItem } from "@/types/global";
 
 export function InvoiceItemTable() {
-  const { data: items } = useInvoiceItems();
+  const { data: items, isLoading } = useInvoiceItems();
   const { mutate: deleteItem, isPending: isDeleting } = useDeleteInvoiceItem();
 
   const columns = [
@@ -19,5 +19,5 @@ export function InvoiceItemTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={items ?? []} />;
+  return <DataTable columns={columns} data={items ?? []} isLoading={isLoading} />;
 }

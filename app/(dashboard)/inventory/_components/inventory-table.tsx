@@ -6,7 +6,7 @@ import { useInventoryList, useDeleteInventory } from "@/app/(dashboard)/inventor
 import { Inventory } from "@/types/global";
 
 export function InventoryTable() {
-  const { data: inventory } = useInventoryList();
+  const { data: inventory, isLoading } = useInventoryList();
   const { mutate: deleteInventory, isPending: isDeleting } = useDeleteInventory();
 
   const columns = [
@@ -19,5 +19,5 @@ export function InventoryTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={inventory ?? []} />;
+  return <DataTable columns={columns} data={inventory ?? []} isLoading={isLoading} />;
 }

@@ -8,7 +8,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { RegistrationRequestActions } from "./registration-request-actions";
 
 export function RegistrationRequestTable() {
-  const { data: requests } = useRegistrationRequests();
+  const { data: requests, isLoading } = useRegistrationRequests();
   const { mutate: approveRequest, isPending: isApproving } = useApproveRegistrationRequest();
   const { mutate: rejectRequest, isPending: isRejecting } = useRejectRegistrationRequest();
 
@@ -31,5 +31,5 @@ export function RegistrationRequestTable() {
     actionsColumn,
   ];
 
-  return <DataTable columns={columns} data={requests ?? []} />;
+  return <DataTable columns={columns} data={requests ?? []} isLoading={isLoading} />;
 }

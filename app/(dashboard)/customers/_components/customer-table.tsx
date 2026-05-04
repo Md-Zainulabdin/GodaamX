@@ -6,7 +6,7 @@ import { useCustomers, useDeleteCustomer } from "@/app/(dashboard)/customers/_ho
 import { Customer } from "@/types/global";
 
 export function CustomerTable() {
-  const { data: customers } = useCustomers();
+  const { data: customers, isLoading } = useCustomers();
   const { mutate: deleteCustomer, isPending: isDeleting } = useDeleteCustomer();
 
   const columns = [
@@ -19,5 +19,5 @@ export function CustomerTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={customers ?? []} />;
+  return <DataTable columns={columns} data={customers ?? []} isLoading={isLoading} />;
 }

@@ -56,13 +56,15 @@ const dateCell: ColumnDef<any>["cell"] = ({ getValue }) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const currencyCell: ColumnDef<any>["cell"] = ({ getValue }) => {
-  const raw = getValue<number>();
-  if (raw == null) return "—";
+  const raw = getValue<number | string>();
+  if (raw == null || raw === "") return "—";
+  const num = typeof raw === "string" ? parseFloat(raw) : raw;
+  if (isNaN(num)) return "—";
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-    minimumFractionDigits: 0,
-  }).format(raw);
+    minimumFractionDigits: 2,
+  }).format(num);
 };
 
 /* =========================================================
@@ -98,7 +100,11 @@ export const SUPPLIER_COLUMNS: TableColumn[] = [
 export const CATEGORY_COLUMNS: TableColumn[] = [
   { accessorKey: "category_name", header: "Category Name" },
   { accessorKey: "description", header: "Description" },
-  { accessorKey: "parent_category_id", header: "Parent Category" },
+  { 
+    accessorKey: "parent_category.category_name", 
+    header: "Parent Category",
+    cell: ({ row }) => row.original.parent_category?.category_name || "—"
+  },
   { accessorKey: "created_at", header: "Created At", cell: dateCell },
 ];
 
@@ -109,8 +115,16 @@ export const CATEGORY_COLUMNS: TableColumn[] = [
 export const PRODUCT_COLUMNS: TableColumn[] = [
   { accessorKey: "product_name", header: "Product Name" },
   { accessorKey: "sku", header: "SKU" },
-  { accessorKey: "category_id", header: "Category" },
-  { accessorKey: "supplier_id", header: "Supplier" },
+  { 
+    accessorKey: "category.category_name", 
+    header: "Category",
+    cell: ({ row }) => row.original.category?.category_name || "—"
+  },
+  { 
+    accessorKey: "supplier.supplier_name", 
+    header: "Supplier",
+    cell: ({ row }) => row.original.supplier?.supplier_name || "—"
+  },
   { accessorKey: "price", header: "Price", cell: currencyCell },
   { accessorKey: "cost_price", header: "Cost Price", cell: currencyCell },
   { accessorKey: "weight", header: "Weight" },
@@ -136,8 +150,16 @@ export const WAREHOUSE_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const INVENTORY_COLUMNS: TableColumn[] = [
-  { accessorKey: "product_id", header: "Product" },
-  { accessorKey: "warehouse_id", header: "Warehouse" },
+  { 
+    accessorKey: "product.product_name", 
+    header: "Product",
+    cell: ({ row }) => row.original.product?.product_name || "—"
+  },
+  { 
+    accessorKey: "warehouse.warehouse_name", 
+    header: "Warehouse",
+    cell: ({ row }) => row.original.warehouse?.warehouse_name || "—"
+  },
   { accessorKey: "quantity", header: "Quantity" },
   { accessorKey: "reorder_level", header: "Reorder Level" },
   { accessorKey: "last_restocked", header: "Last Restocked", cell: dateCell },
@@ -149,8 +171,16 @@ export const INVENTORY_COLUMNS: TableColumn[] = [
 
 export const PURCHASE_ORDER_COLUMNS: TableColumn[] = [
   { accessorKey: "order_number", header: "Order Number" },
-  { accessorKey: "supplier_id", header: "Supplier" },
-  { accessorKey: "warehouse_id", header: "Warehouse" },
+  { 
+    accessorKey: "supplier.supplier_name", 
+    header: "Supplier",
+    cell: ({ row }) => row.original.supplier?.supplier_name || "—"
+  },
+  { 
+    accessorKey: "warehouse.warehouse_name", 
+    header: "Warehouse",
+    cell: ({ row }) => row.original.warehouse?.warehouse_name || "—"
+  }, 
   { accessorKey: "order_date", header: "Order Date", cell: dateCell },
   { accessorKey: "expected_delivery", header: "Expected Delivery", cell: dateCell },
   { accessorKey: "total_amount", header: "Total Amount", cell: currencyCell },
@@ -163,7 +193,11 @@ export const PURCHASE_ORDER_COLUMNS: TableColumn[] = [
 
 export const PURCHASE_ORDER_ITEM_COLUMNS: TableColumn[] = [
   { accessorKey: "po_id", header: "PO ID" },
-  { accessorKey: "product_id", header: "Product" },
+  { 
+    accessorKey: "product.product_name", 
+    header: "Product",
+    cell: ({ row }) => row.original.product?.product_name || "—"
+  },
   { accessorKey: "quantity", header: "Quantity" },
   { accessorKey: "price", header: "Price", cell: currencyCell },
 ];
@@ -174,8 +208,16 @@ export const PURCHASE_ORDER_ITEM_COLUMNS: TableColumn[] = [
 
 export const INVOICE_COLUMNS: TableColumn[] = [
   { accessorKey: "invoice_number", header: "Invoice Number" },
-  { accessorKey: "supplier_id", header: "Supplier" },
-  { accessorKey: "po_id", header: "Purchase Order" },
+  { 
+    accessorKey: "supplier.supplier_name", 
+    header: "Supplier",
+    cell: ({ row }) => row.original.supplier?.supplier_name || "—"
+  },
+  { 
+    accessorKey: "purchase_order.order_number", 
+    header: "Purchase Order",
+    cell: ({ row }) => row.original.purchase_order?.order_number || "—"
+  },
   { accessorKey: "invoice_date", header: "Invoice Date", cell: dateCell },
   { accessorKey: "total_amount", header: "Total Amount", cell: currencyCell },
   { accessorKey: "status", header: "Status", cell: statusBadge },
@@ -187,7 +229,11 @@ export const INVOICE_COLUMNS: TableColumn[] = [
 
 export const INVOICE_ITEM_COLUMNS: TableColumn[] = [
   { accessorKey: "invoice_id", header: "Invoice ID" },
-  { accessorKey: "product_id", header: "Product" },
+  { 
+    accessorKey: "product.product_name", 
+    header: "Product",
+    cell: ({ row }) => row.original.product?.product_name || "—"
+  },
   { accessorKey: "quantity", header: "Quantity" },
   { accessorKey: "price", header: "Price", cell: currencyCell },
 ];
@@ -210,8 +256,16 @@ export const CUSTOMER_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const SHIPMENT_COLUMNS: TableColumn[] = [
-  { accessorKey: "po_id", header: "Purchase Order" },
-  { accessorKey: "warehouse_id", header: "Warehouse" },
+  { 
+    accessorKey: "purchase_order.order_number", 
+    header: "Purchase Order",
+    cell: ({ row }) => row.original.purchase_order?.order_number || "—"
+  },
+  { 
+    accessorKey: "warehouse.warehouse_name", 
+    header: "Warehouse",
+    cell: ({ row }) => row.original.warehouse?.warehouse_name || "—"
+  },
   { accessorKey: "carrier_name", header: "Carrier" },
   { accessorKey: "tracking_number", header: "Tracking Number" },
   { accessorKey: "shipment_date", header: "Shipment Date", cell: dateCell },

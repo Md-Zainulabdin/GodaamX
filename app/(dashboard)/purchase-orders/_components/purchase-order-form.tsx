@@ -38,7 +38,7 @@ export function PurchaseOrderForm(props: Props) {
             order_number: purchaseOrder.order_number ?? "",
             order_date: purchaseOrder.order_date ? new Date(purchaseOrder.order_date).toISOString().split("T")[0] : "",
             expected_delivery: purchaseOrder.expected_delivery ? new Date(purchaseOrder.expected_delivery).toISOString().split("T")[0] : "",
-            total_amount: purchaseOrder.total_amount ?? null,
+            total_amount: purchaseOrder.total_amount ? Number(purchaseOrder.total_amount) : null,
             status: purchaseOrder.status as any,
           }
         : undefined,

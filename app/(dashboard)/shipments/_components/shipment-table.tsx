@@ -6,7 +6,7 @@ import { useShipments, useDeleteShipment } from "@/app/(dashboard)/shipments/_ho
 import { Shipment } from "@/types/global";
 
 export function ShipmentTable() {
-  const { data: shipments } = useShipments();
+  const { data: shipments, isLoading } = useShipments();
   const { mutate: deleteShipment, isPending: isDeleting } = useDeleteShipment();
 
   const columns = [
@@ -19,5 +19,5 @@ export function ShipmentTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={shipments ?? []} />;
+  return <DataTable columns={columns} data={shipments ?? []} isLoading={isLoading} />;
 }

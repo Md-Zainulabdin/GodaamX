@@ -40,7 +40,7 @@ export function InvoiceForm(props: Props) {
             po_id: invoice.po_id ?? null,
             invoice_number: invoice.invoice_number ?? "",
             invoice_date: invoice.invoice_date ? new Date(invoice.invoice_date).toISOString().split("T")[0] : "",
-            total_amount: invoice.total_amount ?? null,
+            total_amount: invoice.total_amount ? Number(invoice.total_amount) : null,
             status: invoice.status as any,
           }
         : undefined,

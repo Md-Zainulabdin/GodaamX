@@ -6,7 +6,7 @@ import { useSuppliers, useDeleteSupplier } from "@/app/(dashboard)/suppliers/_ho
 import { Supplier } from "@/types/global";
 
 export function SupplierTable() {
-  const { data: suppliers } = useSuppliers();
+  const { data: suppliers, isLoading } = useSuppliers();
   const { mutate: deleteSupplier, isPending: isDeleting } = useDeleteSupplier();
 
   const columns = [
@@ -19,5 +19,5 @@ export function SupplierTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={suppliers ?? []} />;
+  return <DataTable columns={columns} data={suppliers ?? []} isLoading={isLoading} />;
 }

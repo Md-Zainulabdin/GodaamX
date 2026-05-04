@@ -6,7 +6,7 @@ import { useProducts, useDeleteProduct } from "@/app/(dashboard)/products/_hook/
 import { Product } from "@/types/global";
 
 export function ProductTable() {
-  const { data: products } = useProducts();
+  const { data: products, isLoading } = useProducts();
   const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
 
   const columns = [
@@ -19,5 +19,5 @@ export function ProductTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={products ?? []} />;
+  return <DataTable columns={columns} data={products ?? []} isLoading={isLoading} />;
 }

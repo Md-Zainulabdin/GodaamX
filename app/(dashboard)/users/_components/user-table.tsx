@@ -6,7 +6,7 @@ import { useUsers, useDeleteUser } from "@/app/(dashboard)/users/_hook/use-users
 import { User } from "@/types/global";
 
 export function UserTable() {
-  const { data: users } = useUsers();
+  const { data: users, isLoading } = useUsers();
   const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser();
 
   const columns = [
@@ -19,5 +19,5 @@ export function UserTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={users ?? []} />;
+  return <DataTable columns={columns} data={users ?? []} isLoading={isLoading} />;
 }

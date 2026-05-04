@@ -41,9 +41,9 @@ export function ProductForm(props: Props) {
             description: product.description ?? undefined,
             category_id: product.category_id ? String(product.category_id) : undefined,
             supplier_id: product.supplier_id ? String(product.supplier_id) : undefined,
-            price: product.price ?? undefined,
-            cost_price: product.cost_price ?? undefined,
-            weight: product.weight ?? undefined,
+            price: product.price ? Number(product.price) : undefined,
+            cost_price: product.cost_price ? Number(product.cost_price) : undefined,
+            weight: product.weight ? Number(product.weight) : undefined,
             status: product.status as "Active" | "Inactive",
           }
         : undefined,
