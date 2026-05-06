@@ -362,7 +362,7 @@ export const INVENTORY_FORM_FIELDS: FormField[] = [
 
 export const SHIPMENT_FORM_FIELDS: FormField[] = [
   {
-    name: "po_id",
+    name: "purchase_order_id",
     label: "Purchase Order",
     type: "select",
   },
@@ -376,13 +376,7 @@ export const SHIPMENT_FORM_FIELDS: FormField[] = [
     name: "carrier_name",
     label: "Carrier Name",
     type: "text",
-    optional: true,
-  },
-  {
-    name: "tracking_number",
-    label: "Tracking Number",
-    placeholder: "Enter tracking number",
-    optional: true,
+    placeholder: "Enter carrier name (e.g. DHL, FedEx)",
   },
   {
     name: "shipment_date",
@@ -407,10 +401,10 @@ export const SHIPMENT_FORM_FIELDS: FormField[] = [
     label: "Status",
     type: "select",
     options: [
-      { label: "Draft", value: "Draft" },
       { label: "Pending", value: "Pending" },
-      { label: "Paid", value: "Paid" },
-      { label: "Overdue", value: "Overdue" },
+      { label: "In Transit", value: "In Transit" },
+      { label: "Delivered", value: "Delivered" },
+      { label: "Returned", value: "Returned" },
       { label: "Cancelled", value: "Cancelled" },
     ],
   },

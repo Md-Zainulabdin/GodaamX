@@ -19,5 +19,5 @@ export function CategoryTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={categories ?? []} isLoading={isLoading} />;
+  return <DataTable columns={columns} data={categories ?? []} isLoading={isLoading} searchKey="category_name" />;
 }

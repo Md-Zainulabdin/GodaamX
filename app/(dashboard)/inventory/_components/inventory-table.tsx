@@ -19,5 +19,5 @@ export function InventoryTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={inventory ?? []} isLoading={isLoading} />;
+  return <DataTable columns={columns} data={inventory ?? []} isLoading={isLoading} searchKey="product.product_name" />;
 }

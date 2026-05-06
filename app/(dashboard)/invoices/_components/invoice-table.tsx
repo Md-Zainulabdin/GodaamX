@@ -19,5 +19,5 @@ export function InvoiceTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={invoices ?? []} isLoading={isLoading} />;
+  return <DataTable columns={columns} data={invoices ?? []} isLoading={isLoading} searchKey="invoice_number" />;
 }

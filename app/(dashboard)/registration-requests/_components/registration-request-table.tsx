@@ -1,7 +1,7 @@
 "use client";
 
 import { DataTable } from "@/components/tables/data-table";
-import { REGISTRATION_REQUEST_COLUMNS, type TableColumn } from "@/constants/table.constants";
+import { REGISTRATION_REQUEST_COLUMNS } from "@/constants/table.constants";
 import { useRegistrationRequests, useApproveRegistrationRequest, useRejectRegistrationRequest } from "@/app/(dashboard)/registration-requests/_hook/use-registration-requests";
 import { RegistrationRequest } from "@/types/global";
 import { ColumnDef } from "@tanstack/react-table";
@@ -31,5 +31,5 @@ export function RegistrationRequestTable() {
     actionsColumn,
   ];
 
-  return <DataTable columns={columns} data={requests ?? []} isLoading={isLoading} />;
+  return <DataTable columns={columns} data={requests ?? []} isLoading={isLoading} searchKey="name" />;
 }

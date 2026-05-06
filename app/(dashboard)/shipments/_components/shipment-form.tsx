@@ -38,17 +38,17 @@ export function ShipmentForm(props: Props) {
     () =>
       isEdit && shipment
         ? {
-          po_id: shipment.po_id,
+          purchase_order_id: shipment.po_id,
           carrier_name: shipment.carrier_name ?? "",
-          tracking_number: shipment.tracking_number ?? "",
           shipment_date: shipment.shipment_date ? new Date(shipment.shipment_date).toISOString().split("T")[0] : "",
           estimated_arrival: shipment.estimated_arrival ? new Date(shipment.estimated_arrival).toISOString().split("T")[0] : "",
           actual_arrival: shipment.actual_arrival ? new Date(shipment.actual_arrival).toISOString().split("T")[0] : "",
           warehouse_id: shipment.warehouse_id ?? null,
           status: shipment.status as any,
+          notes: shipment.notes ?? "",
         }
         : undefined,
-    [isEdit, shipment?.shipment_id, shipment?.po_id, shipment?.warehouse_id, shipment?.tracking_number, shipment?.status]
+    [isEdit, shipment?.shipment_id, shipment?.po_id, shipment?.warehouse_id, shipment?.status]
   );
 
   function handleSubmit(data: ShipmentFormValues) {
@@ -66,7 +66,7 @@ export function ShipmentForm(props: Props) {
       submitLabel={isEdit ? "Update Shipment" : "Create Shipment"}
       isLoading={isCreating || isUpdating}
       dynamicOptions={{
-        po_id: poOptions,
+        purchase_order_id: poOptions,
         warehouse_id: warehouseOptions,
       }}
       defaultValues={defaultValues}

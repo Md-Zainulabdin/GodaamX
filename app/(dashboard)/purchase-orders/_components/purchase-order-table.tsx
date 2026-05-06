@@ -19,5 +19,5 @@ export function PurchaseOrderTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={purchaseOrders ?? []} isLoading={isLoading} />;
+  return <DataTable columns={columns} data={purchaseOrders ?? []} isLoading={isLoading} searchKey="order_number" />;
 }

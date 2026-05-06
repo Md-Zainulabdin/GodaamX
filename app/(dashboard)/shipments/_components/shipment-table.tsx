@@ -19,5 +19,5 @@ export function ShipmentTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={shipments ?? []} isLoading={isLoading} />;
+  return <DataTable columns={columns} data={shipments ?? []} isLoading={isLoading} searchKey="carrier_name" />;
 }

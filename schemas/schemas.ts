@@ -141,14 +141,13 @@ export const invoiceItemSchema = z.object({
 export type InvoiceItemFormValues = z.infer<typeof invoiceItemSchema>;
 
 export const shipmentSchema = z.object({
-  po_id: z.string().uuid("Please select a purchase order"),
+  purchase_order_id: z.string().uuid("Please select a purchase order"),
   warehouse_id: z.string().uuid("Please select a warehouse").optional().nullable(),
-  carrier_name: z.string().optional(),
-  tracking_number: z.string().optional(),
+  carrier_name: z.string().min(1, "Carrier name is required"),
   shipment_date: z.string().optional(),
   estimated_arrival: z.string().optional(),
   actual_arrival: z.string().optional(),
-  status: z.enum(["Draft", "Pending", "Paid", "Overdue", "Cancelled"], { message: "Please select a status" }),
+  status: z.enum(["Draft", "Pending", "Shipped", "Delivered", "Cancelled"], { message: "Please select a status" }),
   notes: z.string().optional(),
 });
 

@@ -26,5 +26,5 @@ export function POITable({ poId }: { poId: string }) {
     },
   ];
 
-  return <DataTable columns={columns} data={items ?? []} isLoading={isLoading} />;
+  return <DataTable columns={columns} data={items ?? []} isLoading={isLoading} searchKey="product.product_name" />;
 }

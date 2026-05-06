@@ -19,5 +19,5 @@ export function ProductTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={products ?? []} isLoading={isLoading} />;
+  return <DataTable columns={columns} data={products ?? []} isLoading={isLoading} searchKey="product_name" />;
 }

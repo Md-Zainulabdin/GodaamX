@@ -40,7 +40,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="w-full max-w-md mx-auto">
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl tracking-tight">Welcome back</CardTitle>
@@ -93,9 +93,6 @@ export default function Login() {
           </form>
         </CardContent>
       </Card>
-      <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
-      </FieldDescription>
     </div>
   );
 }

@@ -19,5 +19,5 @@ export function WarehouseTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={warehouses ?? []} isLoading={isLoading} />;
+  return <DataTable columns={columns} data={warehouses ?? []} isLoading={isLoading} searchKey="warehouse_name" />;
 }

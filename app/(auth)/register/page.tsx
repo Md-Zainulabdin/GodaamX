@@ -29,7 +29,7 @@ export default function Register() {
       const res = await apiClient.post(AUTH_API.register, data);
       if (res) {
         toast("Registration Successfull.");
-        router.push("/login");
+        router.push("/registration-success");
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : (err as { message?: string })?.message ?? "Unexpected error";
@@ -38,7 +38,7 @@ export default function Register() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="w-full max-w-md mx-auto">
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl tracking-tight">Registration</CardTitle>
@@ -115,9 +115,6 @@ export default function Register() {
           </form>
         </CardContent>
       </Card>
-      <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
-      </FieldDescription>
     </div>
   );
 }

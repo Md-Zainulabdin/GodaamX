@@ -19,5 +19,5 @@ export function UserTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={users ?? []} isLoading={isLoading} />;
+  return <DataTable columns={columns} data={users ?? []} isLoading={isLoading} searchKey="name" />;
 }

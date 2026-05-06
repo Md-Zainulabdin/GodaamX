@@ -19,5 +19,5 @@ export function SupplierTable() {
     }),
   ];
 
-  return <DataTable columns={columns} data={suppliers ?? []} isLoading={isLoading} />;
+  return <DataTable columns={columns} data={suppliers ?? []} isLoading={isLoading} searchKey="supplier_name" />;
 }
