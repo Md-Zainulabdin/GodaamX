@@ -8,12 +8,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldDescription, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { loginSchema, type LoginSchema } from "@/schemas/schemas";
 import { useAuth } from "@/hooks/use-auth";
 
-import { apiClient } from "@/lib/axios";
+import { apiClient, type ApiError } from "@/lib/axios";
 import { AUTH_API } from "@/constants/api.constants";
 
 export default function Login() {
@@ -33,9 +33,9 @@ export default function Login() {
 
       save(res?.data?.access_token, res?.data?.user);
       toast("You have signed in successfully.");
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : (err as { message?: string })?.message ?? "Unexpected error";
-      toast(`Login failed: ${message}`);
+    } catch (err: any) {
+      const message = err?.message || "Login failed. Please try again.";
+      toast.error(message);
     }
   }
 

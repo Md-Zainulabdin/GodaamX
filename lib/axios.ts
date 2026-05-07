@@ -74,7 +74,7 @@ apiClient.interceptors.response.use(
     // Unauthorized → force logout
     if (status === 401) {
       await clearSession();
-      if (typeof window !== "undefined") {
+      if (typeof window !== "undefined" && window.location.pathname !== "/login") {
         window.location.href = "/login";
       }
     }

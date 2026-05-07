@@ -7,7 +7,7 @@ import { Warehouse } from "@/types/global";
 
 export function WarehouseTable() {
   const { data: warehouses, isLoading } = useWarehouses();
-  const { mutate: deleteWarehouse, isPending: isDeleting } = useDeleteWarehouse();
+  const { mutate: deleteWarehouse, isPending: isDeleting, variables: deletingId } = useDeleteWarehouse();
 
   const columns = [
     ...WAREHOUSE_COLUMNS,
@@ -16,6 +16,7 @@ export function WarehouseTable() {
       idKey: "warehouse_id",
       onDelete: deleteWarehouse,
       isDeleting,
+      deletingId,
     }),
   ];
 

@@ -7,7 +7,7 @@ import { Product } from "@/types/global";
 
 export function ProductTable() {
   const { data: products, isLoading } = useProducts();
-  const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
+  const { mutate: deleteProduct, isPending: isDeleting, variables: deletingId } = useDeleteProduct();
 
   const columns = [
     ...PRODUCT_COLUMNS,
@@ -16,6 +16,7 @@ export function ProductTable() {
       idKey: "product_id",
       onDelete: deleteProduct,
       isDeleting,
+      deletingId,
     }),
   ];
 

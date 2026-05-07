@@ -1,16 +1,18 @@
 "use client";
 
+import { useMemo } from "react";
 import { DataTable } from "@/components/tables/data-table";
 import { DataTableActions } from "@/components/tables/data-table-actions";
 import { PURCHASE_ORDER_ITEM_COLUMNS } from "@/constants/table.constants";
 import { usePOI, useDeletePOI } from "@/app/(dashboard)/purchase-order-items/_hook/use-poi";
 import { PurchaseOrderItem } from "@/types/global";
 
+
 export function POITable({ poId }: { poId: string }) {
   const { data: items, isLoading } = usePOI(poId);
-  const { mutate: deleteItem, isPending: isDeleting } = useDeletePOI(poId);
+  const { mutate: deleteItem, isPending: isDeleting, variables: deletingId } = useDeletePOI(poId);
 
-  const columns = [
+  const columns = useMemo(() => [
     ...PURCHASE_ORDER_ITEM_COLUMNS,
     {
       accessorKey: "__actions",
@@ -20,11 +22,11 @@ export function POITable({ poId }: { poId: string }) {
           id={row.original.po_item_id}
           editPath={`/purchase-order-items/update/${row.original.po_item_id}?po_id=${poId}`}
           onDelete={deleteItem}
-          isDeleting={isDeleting}
+          isDeleting={isDeleting && deletingId === row.original.po_item_id}
         />
       ),
     },
-  ];
+  ], [poId, deleteItem, isDeleting, deletingId]);
 
   return <DataTable columns={columns} data={items ?? []} isLoading={isLoading} searchKey="product.product_name" />;
 }

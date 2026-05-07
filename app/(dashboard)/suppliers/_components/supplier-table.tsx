@@ -7,7 +7,7 @@ import { Supplier } from "@/types/global";
 
 export function SupplierTable() {
   const { data: suppliers, isLoading } = useSuppliers();
-  const { mutate: deleteSupplier, isPending: isDeleting } = useDeleteSupplier();
+  const { mutate: deleteSupplier, isPending: isDeleting, variables: deletingId } = useDeleteSupplier();
 
   const columns = [
     ...SUPPLIER_COLUMNS,
@@ -16,6 +16,7 @@ export function SupplierTable() {
       idKey: "supplier_id",
       onDelete: deleteSupplier,
       isDeleting,
+      deletingId,
     }),
   ];
 

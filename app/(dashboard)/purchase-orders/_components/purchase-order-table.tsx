@@ -7,7 +7,7 @@ import { PurchaseOrder } from "@/types/global";
 
 export function PurchaseOrderTable() {
   const { data: purchaseOrders, isLoading } = usePurchaseOrders();
-  const { mutate: deletePurchaseOrder, isPending: isDeleting } = useDeletePurchaseOrder();
+  const { mutate: deletePurchaseOrder, isPending: isDeleting, variables: deletingId } = useDeletePurchaseOrder();
 
   const columns = [
     ...PURCHASE_ORDER_COLUMNS,
@@ -16,6 +16,7 @@ export function PurchaseOrderTable() {
       idKey: "po_id",
       onDelete: deletePurchaseOrder,
       isDeleting,
+      deletingId,
     }),
   ];
 

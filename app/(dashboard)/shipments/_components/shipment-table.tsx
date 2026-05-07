@@ -7,7 +7,7 @@ import { Shipment } from "@/types/global";
 
 export function ShipmentTable() {
   const { data: shipments, isLoading } = useShipments();
-  const { mutate: deleteShipment, isPending: isDeleting } = useDeleteShipment();
+  const { mutate: deleteShipment, isPending: isDeleting, variables: deletingId } = useDeleteShipment();
 
   const columns = [
     ...SHIPMENT_COLUMNS,
@@ -16,6 +16,7 @@ export function ShipmentTable() {
       idKey: "shipment_id",
       onDelete: deleteShipment,
       isDeleting,
+      deletingId,
     }),
   ];
 

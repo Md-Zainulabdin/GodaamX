@@ -7,7 +7,7 @@ import { Customer } from "@/types/global";
 
 export function CustomerTable() {
   const { data: customers, isLoading } = useCustomers();
-  const { mutate: deleteCustomer, isPending: isDeleting } = useDeleteCustomer();
+  const { mutate: deleteCustomer, isPending: isDeleting, variables: deletingId } = useDeleteCustomer();
 
   const columns = [
     ...CUSTOMER_COLUMNS,
@@ -16,6 +16,7 @@ export function CustomerTable() {
       idKey: "customer_id",
       onDelete: deleteCustomer,
       isDeleting,
+      deletingId,
     }),
   ];
 

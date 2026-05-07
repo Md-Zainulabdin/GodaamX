@@ -7,7 +7,7 @@ import { Invoice } from "@/types/global";
 
 export function InvoiceTable() {
   const { data: invoices, isLoading } = useInvoices();
-  const { mutate: deleteInvoice, isPending: isDeleting } = useDeleteInvoice();
+  const { mutate: deleteInvoice, isPending: isDeleting, variables: deletingId } = useDeleteInvoice();
 
   const columns = [
     ...INVOICE_COLUMNS,
@@ -16,6 +16,7 @@ export function InvoiceTable() {
       idKey: "invoice_id",
       onDelete: deleteInvoice,
       isDeleting,
+      deletingId,
     }),
   ];
 

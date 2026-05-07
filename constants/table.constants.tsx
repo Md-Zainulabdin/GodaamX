@@ -8,6 +8,7 @@ import { ColumnDef } from "@tanstack/react-table";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TableColumn<TData = any> = {
+  id?: string;
   accessorKey: string;
   header: string;
   cell?: ColumnDef<TData>["cell"];
@@ -18,6 +19,7 @@ type ActionsColumnOptions = {
   idKey: string;
   onDelete: (id: string) => void;
   isDeleting?: boolean;
+  deletingId?: string;
 };
 
 /* =========================================================
@@ -28,14 +30,17 @@ export function actionsColumn<TData>(opts: ActionsColumnOptions): TableColumn<TD
   return {
     accessorKey: "__actions",
     header: "Actions",
-    cell: ({ row }) => (
-      <DataTableActions
-        id={row.original[opts.idKey as keyof TData] as string}
-        editPath={`${opts.basePath}/${row.original[opts.idKey as keyof TData]}`}
-        onDelete={opts.onDelete}
-        isDeleting={opts.isDeleting}
-      />
-    ),
+    cell: ({ row }) => {
+      const id = row.original[opts.idKey as keyof TData] as string;
+      return (
+        <DataTableActions
+          id={id}
+          editPath={`${opts.basePath}/${id}`}
+          onDelete={opts.onDelete}
+          isDeleting={opts.isDeleting && opts.deletingId === id}
+        />
+      );
+    },
   };
 }
 
@@ -101,6 +106,7 @@ export const CATEGORY_COLUMNS: TableColumn[] = [
   { accessorKey: "category_name", header: "Category Name" },
   { accessorKey: "description", header: "Description" },
   { 
+    id: "parent_category.category_name",
     accessorKey: "parent_category.category_name", 
     header: "Parent Category",
     cell: ({ row }) => row.original.parent_category?.category_name || "—"
@@ -116,11 +122,13 @@ export const PRODUCT_COLUMNS: TableColumn[] = [
   { accessorKey: "product_name", header: "Product Name" },
   { accessorKey: "sku", header: "SKU" },
   { 
+    id: "category.category_name",
     accessorKey: "category.category_name", 
     header: "Category",
     cell: ({ row }) => row.original.category?.category_name || "—"
   },
   { 
+    id: "supplier.supplier_name",
     accessorKey: "supplier.supplier_name", 
     header: "Supplier",
     cell: ({ row }) => row.original.supplier?.supplier_name || "—"
@@ -151,11 +159,13 @@ export const WAREHOUSE_COLUMNS: TableColumn[] = [
 
 export const INVENTORY_COLUMNS: TableColumn[] = [
   { 
+    id: "product.product_name",
     accessorKey: "product.product_name", 
     header: "Product",
     cell: ({ row }) => row.original.product?.product_name || "—"
   },
   { 
+    id: "warehouse.warehouse_name",
     accessorKey: "warehouse.warehouse_name", 
     header: "Warehouse",
     cell: ({ row }) => row.original.warehouse?.warehouse_name || "—"
@@ -172,11 +182,13 @@ export const INVENTORY_COLUMNS: TableColumn[] = [
 export const PURCHASE_ORDER_COLUMNS: TableColumn[] = [
   { accessorKey: "order_number", header: "Order Number" },
   { 
+    id: "supplier.supplier_name",
     accessorKey: "supplier.supplier_name", 
     header: "Supplier",
     cell: ({ row }) => row.original.supplier?.supplier_name || "—"
   },
   { 
+    id: "warehouse.warehouse_name",
     accessorKey: "warehouse.warehouse_name", 
     header: "Warehouse",
     cell: ({ row }) => row.original.warehouse?.warehouse_name || "—"
@@ -192,10 +204,16 @@ export const PURCHASE_ORDER_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const PURCHASE_ORDER_ITEM_COLUMNS: TableColumn[] = [
-  { accessorKey: "po_id", header: "PO ID" },
+  { 
+    id: "purchase_order.order_number",
+    accessorKey: "purchase_order.order_number", 
+    header: "Order Number",
+    cell: ({ row }) => row.original.purchase_order?.order_number || "—"
+  },
   { 
     accessorKey: "product.product_name", 
     header: "Product",
+    id: "product.product_name",
     cell: ({ row }) => row.original.product?.product_name || "—"
   },
   { accessorKey: "quantity", header: "Quantity" },
@@ -209,11 +227,13 @@ export const PURCHASE_ORDER_ITEM_COLUMNS: TableColumn[] = [
 export const INVOICE_COLUMNS: TableColumn[] = [
   { accessorKey: "invoice_number", header: "Invoice Number" },
   { 
+    id: "supplier.supplier_name",
     accessorKey: "supplier.supplier_name", 
     header: "Supplier",
     cell: ({ row }) => row.original.supplier?.supplier_name || "—"
   },
   { 
+    id: "purchase_order.order_number",
     accessorKey: "purchase_order.order_number", 
     header: "Purchase Order",
     cell: ({ row }) => row.original.purchase_order?.order_number || "—"
@@ -257,11 +277,13 @@ export const CUSTOMER_COLUMNS: TableColumn[] = [
 
 export const SHIPMENT_COLUMNS: TableColumn[] = [
   { 
+    id: "purchase_order.order_number",
     accessorKey: "purchase_order.order_number", 
     header: "Purchase Order",
     cell: ({ row }) => row.original.purchase_order?.order_number || "—"
   },
   { 
+    id: "warehouse.warehouse_name",
     accessorKey: "warehouse.warehouse_name", 
     header: "Warehouse",
     cell: ({ row }) => row.original.warehouse?.warehouse_name || "—"

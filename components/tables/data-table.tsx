@@ -45,16 +45,20 @@ export function DataTable<TData>({ columns, data, isLoading, searchKey }: DataTa
 
   return (
     <div className="space-y-4">
-      {searchKey && (
-        <div className="flex items-center">
-          <Input
-            placeholder={`Search...`}
-            value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
-            onChange={(event) => table.getColumn(searchKey)?.setFilterValue(event.target.value)}
-            className="max-w-sm"
-          />
-        </div>
-      )}
+      {(() => {
+        const column = searchKey ? table.getAllColumns().find((c) => c.id === searchKey) : null;
+        if (!column) return null;
+        return (
+          <div className="flex items-center">
+            <Input
+              placeholder="Search..."
+              value={(column.getFilterValue() as string) ?? ""}
+              onChange={(event) => column.setFilterValue(event.target.value)}
+              className="max-w-sm"
+            />
+          </div>
+        );
+      })()}
 
       <div className="overflow-hidden rounded-md border">
         <Table>

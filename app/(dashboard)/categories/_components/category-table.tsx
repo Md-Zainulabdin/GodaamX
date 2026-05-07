@@ -7,7 +7,7 @@ import { Category } from "@/types/global";
 
 export function CategoryTable() {
   const { data: categories, isLoading } = useCategories();
-  const { mutate: deleteCategory, isPending: isDeleting } = useDeleteCategory();
+  const { mutate: deleteCategory, isPending: isDeleting, variables: deletingId } = useDeleteCategory();
 
   const columns = [
     ...CATEGORY_COLUMNS,
@@ -16,6 +16,7 @@ export function CategoryTable() {
       idKey: "category_id",
       onDelete: deleteCategory,
       isDeleting,
+      deletingId,
     }),
   ];
 

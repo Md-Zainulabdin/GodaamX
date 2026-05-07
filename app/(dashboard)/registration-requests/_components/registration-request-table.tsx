@@ -9,8 +9,8 @@ import { RegistrationRequestActions } from "./registration-request-actions";
 
 export function RegistrationRequestTable() {
   const { data: requests, isLoading } = useRegistrationRequests();
-  const { mutate: approveRequest, isPending: isApproving } = useApproveRegistrationRequest();
-  const { mutate: rejectRequest, isPending: isRejecting } = useRejectRegistrationRequest();
+  const { mutate: approveRequest, isPending: isApproving, variables: approvingId } = useApproveRegistrationRequest();
+  const { mutate: rejectRequest, isPending: isRejecting, variables: rejectingId } = useRejectRegistrationRequest();
 
   const actionsColumn: ColumnDef<RegistrationRequest> = {
     accessorKey: "__actions",
@@ -20,8 +20,8 @@ export function RegistrationRequestTable() {
         requestId={row.original.request_id}
         onApprove={approveRequest}
         onReject={rejectRequest}
-        isApproving={isApproving}
-        isRejecting={isRejecting}
+        isApproving={isApproving && approvingId === row.original.request_id}
+        isRejecting={isRejecting && rejectingId === row.original.request_id}
       />
     ),
   };

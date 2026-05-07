@@ -7,7 +7,7 @@ import { Inventory } from "@/types/global";
 
 export function InventoryTable() {
   const { data: inventory, isLoading } = useInventoryList();
-  const { mutate: deleteInventory, isPending: isDeleting } = useDeleteInventory();
+  const { mutate: deleteInventory, isPending: isDeleting, variables: deletingId } = useDeleteInventory();
 
   const columns = [
     ...INVENTORY_COLUMNS,
@@ -16,6 +16,7 @@ export function InventoryTable() {
       idKey: "inventory_id",
       onDelete: deleteInventory,
       isDeleting,
+      deletingId,
     }),
   ];
 
