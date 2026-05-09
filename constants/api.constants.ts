@@ -207,3 +207,11 @@ export const SPEECH_API = {
    transcribe: api("/speech/transcribe"),
    synthesize: api("/speech/synthesize"),
 };
+
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
+
+export const DASHBOARD_API = {
+   get: api("/dashboard"),
+};
