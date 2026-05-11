@@ -12,17 +12,18 @@ import {
 import { useInvoices } from "@/app/(dashboard)/invoices/_hook/use-invoices";
 import { useProducts } from "@/app/(dashboard)/products/_hook/use-products";
 
-type Props = { mode: "create" } | { mode: "edit"; id: string };
+type Props = { mode: "create"; invoiceId?: string } | { mode: "edit"; id: string; invoiceId: string };
 
 export function InvoiceItemForm(props: Props) {
   const isEdit = props.mode === "edit";
+  const invoiceId = props.invoiceId || "";
   const id = isEdit ? props.id : "";
 
   const { data: invoices } = useInvoices();
   const { data: products } = useProducts();
-  const { data: item, isLoading } = useInvoiceItem(id);
-  const { mutate: createItem, isPending: isCreating } = useCreateInvoiceItem();
-  const { mutate: updateItem, isPending: isUpdating } = useUpdateInvoiceItem(id);
+  const { data: item, isLoading } = useInvoiceItem(invoiceId, id);
+  const { mutate: createItem, isPending: isCreating } = useCreateInvoiceItem(invoiceId);
+  const { mutate: updateItem, isPending: isUpdating } = useUpdateInvoiceItem(invoiceId, id);
 
   const invoiceOptions = invoices?.map((inv) => ({
     label: inv.invoice_number || `Invoice ${inv.invoice_id.slice(0, 8)}`,
@@ -43,8 +44,8 @@ export function InvoiceItemForm(props: Props) {
           quantity: Number(item.quantity),
           price: Number(item.price),
         }
-        : undefined,
-    [isEdit, item]
+        : invoiceId ? { invoice_id: invoiceId } as any : undefined,
+    [isEdit, item, invoiceId]
   );
 
   function handleSubmit(data: InvoiceItemFormValues) {

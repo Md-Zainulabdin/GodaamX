@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,6 +12,8 @@ import { InvoiceItemForm } from "../../_components/invoice-item-form";
 
 export default function UpdateInvoiceItemPage() {
   const { id } = useParams();
+  const searchParams = useSearchParams();
+  const invoiceId = searchParams.get("invoice_id") || "";
 
   return (
     <div className="space-y-6">
@@ -22,7 +24,7 @@ export default function UpdateInvoiceItemPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/invoice-items">Invoice Items</BreadcrumbLink>
+            <BreadcrumbLink href={`/invoice-items?invoice_id=${invoiceId}`}>Invoice Items</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -36,7 +38,7 @@ export default function UpdateInvoiceItemPage() {
       </div>
 
       <div >
-        <InvoiceItemForm mode="edit" id={id as string} />
+        <InvoiceItemForm mode="edit" id={id as string} invoiceId={invoiceId} />
       </div>
     </div>
   );

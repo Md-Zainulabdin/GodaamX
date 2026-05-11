@@ -158,11 +158,11 @@ export const INVOICE_API = {
    ========================================================= */
 
 export const INVOICE_ITEM_API = {
-   list: api("/invoice-items"),
-   create: api("/invoice-items"),
-   detail: (id: string) => api(`/invoice-items/${id}`),
-   update: (id: string) => api(`/invoice-items/${id}`),
-   delete: (id: string) => api(`/invoice-items/${id}`),
+   list: (invoiceId: string) => api(`/invoice/${invoiceId}/items`),
+   create: (invoiceId: string) => api(`/invoice/${invoiceId}/items`),
+   detail: (invoiceId: string, itemId: string) => api(`/invoice/${invoiceId}/items/${itemId}`),
+   update: (invoiceId: string, itemId: string) => api(`/invoice/${invoiceId}/items/${itemId}`),
+   delete: (invoiceId: string, itemId: string) => api(`/invoice/${invoiceId}/items/${itemId}`),
 };
 
 /* =========================================================

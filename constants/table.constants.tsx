@@ -248,8 +248,13 @@ export const INVOICE_COLUMNS: TableColumn[] = [
    ========================================================= */
 
 export const INVOICE_ITEM_COLUMNS: TableColumn[] = [
-  { accessorKey: "invoice_id", header: "Invoice ID" },
   { 
+    accessorKey: "invoice.invoice_number", 
+    header: "Invoice Number",
+    cell: ({ row }) => row.original.invoice?.invoice_number || "—"
+  },
+  { 
+    id: "product.product_name",
     accessorKey: "product.product_name", 
     header: "Product",
     cell: ({ row }) => row.original.product?.product_name || "—"
