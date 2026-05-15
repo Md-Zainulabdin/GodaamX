@@ -197,6 +197,10 @@ export const SHIPMENT_API = {
 
 export const CHAT_API = {
    sendMessage: api("/chat/message"),
+   conversations: api("/chat/conversations"),
+   messages: (id: string) => api(`/chat/conversations/${id}/messages`),
+   updateConversation: (id: string) => api(`/chat/conversations/${id}`),
+   deleteConversation: (id: string) => api(`/chat/conversations/${id}`),
 };
 
 /* =========================================================

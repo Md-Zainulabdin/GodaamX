@@ -6,6 +6,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { SIDEBAR_ITEMS } from "@/constants/constants";
 import { useAuth } from "@/hooks/use-auth";
+import { Sparkles } from "lucide-react";
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -66,7 +67,18 @@ export function AppSidebar() {
           </nav>
         </section>
       </SidebarContent>
-      <SidebarFooter />
+      <SidebarFooter className="p-4">
+        <Link
+          href="/chat"
+          className={cn(
+            "group flex w-full items-center justify-center gap-2.5 rounded-lg bg-linear-to-br from-zinc-900 to-zinc-700 px-4 py-3 text-sm font-medium text-white shadow-lg transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]",
+            pathname === "/chat" && "ring-2 ring-zinc-900 ring-offset-2"
+          )}
+        >
+          <Sparkles size={18} className="text-zinc-400 group-hover:text-white" />
+          <span>Ask Agent</span>
+        </Link>
+      </SidebarFooter>
     </Sidebar>
   );
 }

@@ -28,16 +28,6 @@ export interface RegistrationRequest {
   created_at: Timestamp;
 }
 
-/* =========================================================
-   CHAT MESSAGES
-   ========================================================= */
-
-export interface ChatMessage {
-  id: string;
-  content: string;
-  role: "user" | "assistant";
-  timestamp: Timestamp;
-}
 
 /* =========================================================
    USERS
@@ -338,4 +328,33 @@ export interface SupplierDashboard {
     order_status: { status: string; count: number }[];
     top_products: { product: string; quantity: number }[];
   };
+}
+
+/* =========================================================
+   CHAT
+   ========================================================= */
+
+export interface Conversation {
+  conversation_id: string;
+  title: string;
+  message_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ChatMessage {
+  message_id: string;
+  role: "user" | "assistant";
+  content: string;
+  created_at: string;
+}
+
+export interface ChatMessageResponse {
+  reply: string;
+  conversation_id: string;
+}
+
+export interface ChatRequest {
+  prompt: string;
+  conversation_id: string | null;
 }
