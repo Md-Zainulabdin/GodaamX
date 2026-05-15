@@ -1,11 +1,8 @@
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { apiClient, type ApiError } from "@/lib/axios";
+import { apiClient } from "@/lib/axios";
 import { Supplier } from "@/types/global";
-
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { SUPPLIER_API } from "@/constants/api.constants";
 import { SupplierFormValues } from "@/schemas/schemas";
+import { useApiQuery, useApiMutation } from "@/hooks/use-api-factory";
 
 /* =========================================================
    Suppliers Key
@@ -17,102 +14,48 @@ export const supplierKeys = {
 };
 
 /* =========================================================
-   List Suppliers
+   Suppliers Hooks
    ========================================================= */
 
 export function useSuppliers() {
-  return useQuery({
-    queryKey: supplierKeys.all,
-    queryFn: async () => {
-      const res = await apiClient.get<Supplier[]>(SUPPLIER_API.list);
-      return res.data;
-    },
-  });
+  return useApiQuery<Supplier[]>(supplierKeys.all, SUPPLIER_API.list);
 }
-
-/* =========================================================
-   Suppliers Detail
-   ========================================================= */
 
 export function useSupplier(id: string) {
-  return useQuery({
-    queryKey: supplierKeys.detail(id),
-    queryFn: async () => {
-      const res = await apiClient.get<Supplier>(SUPPLIER_API.detail(id));
-      return res.data;
-    },
-    enabled: !!id,
-  });
+  return useApiQuery<Supplier>(supplierKeys.detail(id), SUPPLIER_API.detail(id), { enabled: !!id });
 }
-
-/* =========================================================
-   Create Supplier
-   ========================================================= */
 
 export function useCreateSupplier() {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (body: SupplierFormValues) => {
-      const res = await apiClient.post<Supplier>(SUPPLIER_API.create, body);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: supplierKeys.all });
-      toast.success("Supplier created successfully.");
-      router.push("/suppliers");
-    },
-
-    onError: (err: ApiError) => {
-      toast.error("Failed to create supplier", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (body: SupplierFormValues) => apiClient.post<Supplier>(SUPPLIER_API.create, body).then((r) => r.data),
+    {
+      invalidateKeys: [supplierKeys.all],
+      successMessage: "Supplier created successfully.",
+      redirectPath: "/suppliers",
+      errorMessage: "Failed to create supplier",
+    }
+  );
 }
-
-/* =========================================================
-   Update Supplier
-   ========================================================= */
 
 export function useUpdateSupplier(id: string) {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (body: Partial<SupplierFormValues>) => {
-      const res = await apiClient.put<Supplier>(SUPPLIER_API.put(id), body);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: supplierKeys.all });
-      queryClient.invalidateQueries({ queryKey: supplierKeys.detail(id) });
-      toast.success("Supplier updated successfully.");
-      router.push("/suppliers");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to update supplier", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (body: Partial<SupplierFormValues>) => apiClient.put<Supplier>(SUPPLIER_API.put(id), body).then((r) => r.data),
+    {
+      invalidateKeys: [supplierKeys.all, supplierKeys.detail(id)],
+      successMessage: "Supplier updated successfully.",
+      redirectPath: "/suppliers",
+      errorMessage: "Failed to update supplier",
+    }
+  );
 }
 
-/* =========================================================
-   Delete Supplier
-   ========================================================= */
-
 export function useDeleteSupplier() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (id: string) => {
-      await apiClient.delete(SUPPLIER_API.delete(id));
-      return id;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: supplierKeys.all });
-      toast.success("Supplier deleted.");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to delete supplier", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (id: string) => apiClient.delete(SUPPLIER_API.delete(id)).then(() => id),
+    {
+      invalidateKeys: [supplierKeys.all],
+      successMessage: "Supplier deleted.",
+      errorMessage: "Failed to delete supplier",
+    }
+  );
 }

@@ -1,11 +1,8 @@
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { apiClient, type ApiError } from "@/lib/axios";
+import { apiClient } from "@/lib/axios";
 import { PurchaseOrder } from "@/types/global";
-
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { PURCHASE_ORDER_API } from "@/constants/api.constants";
 import { PurchaseOrderFormValues } from "@/schemas/schemas";
+import { useApiQuery, useApiMutation } from "@/hooks/use-api-factory";
 
 /* =========================================================
    Purchase Orders Keys
@@ -17,101 +14,48 @@ export const purchaseOrderKeys = {
 };
 
 /* =========================================================
-   Purchase Orders List
+   Purchase Orders Hooks
    ========================================================= */
 
 export function usePurchaseOrders() {
-  return useQuery({
-    queryKey: purchaseOrderKeys.all,
-    queryFn: async () => {
-      const res = await apiClient.get<PurchaseOrder[]>(PURCHASE_ORDER_API.list);
-      return res.data;
-    },
-  });
+  return useApiQuery<PurchaseOrder[]>(purchaseOrderKeys.all, PURCHASE_ORDER_API.list);
 }
-
-/* =========================================================
-   Purchase Order Detail
-   ========================================================= */
 
 export function usePurchaseOrder(id: string) {
-  return useQuery({
-    queryKey: purchaseOrderKeys.detail(id),
-    queryFn: async () => {
-      const res = await apiClient.get<PurchaseOrder>(PURCHASE_ORDER_API.detail(id));
-      return res.data;
-    },
-    enabled: !!id,
-  });
+  return useApiQuery<PurchaseOrder>(purchaseOrderKeys.detail(id), PURCHASE_ORDER_API.detail(id), { enabled: !!id });
 }
-
-/* =========================================================
-   Create Purchase Order
-   ========================================================= */
 
 export function useCreatePurchaseOrder() {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (body: PurchaseOrderFormValues) => {
-      const res = await apiClient.post<PurchaseOrder>(PURCHASE_ORDER_API.create, body);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.all });
-      toast.success("Purchase order created successfully.");
-      router.push("/purchase-orders");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to create purchase order", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (body: PurchaseOrderFormValues) => apiClient.post<PurchaseOrder>(PURCHASE_ORDER_API.create, body).then((r) => r.data),
+    {
+      invalidateKeys: [purchaseOrderKeys.all],
+      successMessage: "Purchase order created successfully.",
+      redirectPath: "/purchase-orders",
+      errorMessage: "Failed to create purchase order",
+    }
+  );
 }
-
-/* =========================================================
-   Update Purchase Order
-   ========================================================= */
 
 export function useUpdatePurchaseOrder(id: string) {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (body: PurchaseOrderFormValues) => {
-      const res = await apiClient.put<PurchaseOrder>(PURCHASE_ORDER_API.update(id), body);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.all });
-      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.detail(id) });
-      toast.success("Purchase order updated successfully.");
-      router.push("/purchase-orders");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to update purchase order", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (body: Partial<PurchaseOrderFormValues>) => apiClient.put<PurchaseOrder>(PURCHASE_ORDER_API.update(id), body).then((r) => r.data),
+    {
+      invalidateKeys: [purchaseOrderKeys.all, purchaseOrderKeys.detail(id)],
+      successMessage: "Purchase order updated successfully.",
+      redirectPath: "/purchase-orders",
+      errorMessage: "Failed to update purchase order",
+    }
+  );
 }
 
-/* =========================================================
-   Delete Purchase Order
-   ========================================================= */
-
 export function useDeletePurchaseOrder() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (id: string) => {
-      await apiClient.delete(PURCHASE_ORDER_API.delete(id));
-      return id;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.all });
-      toast.success("Purchase order deleted.");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to delete purchase order", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (id: string) => apiClient.delete(PURCHASE_ORDER_API.delete(id)).then(() => id),
+    {
+      invalidateKeys: [purchaseOrderKeys.all],
+      successMessage: "Purchase order deleted.",
+      errorMessage: "Failed to delete purchase order",
+    }
+  );
 }

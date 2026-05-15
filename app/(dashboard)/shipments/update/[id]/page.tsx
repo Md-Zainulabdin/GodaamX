@@ -1,43 +1,24 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+"use client";
 
+import { useParams } from "next/navigation";
 import { ShipmentForm } from "../../_components/shipment-form";
+import { PageHeader } from "@/components/layout/page-header";
 
-export default async function UpdateShipmentPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export default function UpdateShipmentPage() {
+  const { id } = useParams();
 
   return (
-    <div>
-      {/* Breadcrumb */}
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">GodaamX</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/shipments">Shipments</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">Update</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+    <div className="space-y-6">
+      <PageHeader 
+        title="Update Shipment Status" 
+        breadcrumbs={[
+          { label: "Shipments", href: "/shipments" },
+          { label: "Update" }
+        ]}
+      />
 
-      {/* Page Title */}
-      <div className="my-8 w-full">
-        <h1 className="text-2xl font-semibold tracking-tight">Update Shipment</h1>
-      </div>
-
-      {/* Shipment Form */}
-      <div>
-        <ShipmentForm mode="edit" id={id} />
+      <div className="max-w-2xl">
+        <ShipmentForm mode="edit" id={id as string} />
       </div>
     </div>
   );

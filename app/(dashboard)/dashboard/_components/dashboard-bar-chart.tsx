@@ -16,7 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 interface DashboardBarChartProps {
   title: string;
   description?: string;
-  data: any[];
+  data: Record<string, string | number>[];
   xKey: string;
   yKey: string;
   yLabel?: string;
@@ -62,7 +62,7 @@ export function DashboardBarChart({
             />
             <Tooltip
               contentStyle={{ backgroundColor: "#fff", borderRadius: "8px", border: "1px solid #e2e8f0" }}
-              formatter={(value: any) => [`${yLabel || ""}${value}`, yKey]}
+              formatter={(value: number | string) => [`${yLabel || ""}${value}`, yKey]}
             />
             <Bar dataKey={yKey} radius={[4, 4, 0, 0]}>
               {data.map((entry, index) => (

@@ -1,11 +1,8 @@
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { apiClient, type ApiError } from "@/lib/axios";
+import { apiClient } from "@/lib/axios";
 import { Category } from "@/types/global";
-
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { CATEGORY_API } from "@/constants/api.constants";
 import { CategoryFormValues } from "@/schemas/schemas";
+import { useApiQuery, useApiMutation } from "@/hooks/use-api-factory";
 
 /* =========================================================
    Categories Keys
@@ -17,101 +14,48 @@ export const categoryKeys = {
 };
 
 /* =========================================================
-   List Categories
+   Categories Hooks
    ========================================================= */
 
 export function useCategories() {
-  return useQuery({
-    queryKey: categoryKeys.all,
-    queryFn: async () => {
-      const res = await apiClient.get<Category[]>(CATEGORY_API.list);
-      return res.data;
-    },
-  });
+  return useApiQuery<Category[]>(categoryKeys.all, CATEGORY_API.list);
 }
-
-/* =========================================================
-   Category Detail
-   ========================================================= */
 
 export function useCategory(id: string) {
-  return useQuery({
-    queryKey: categoryKeys.detail(id),
-    queryFn: async () => {
-      const res = await apiClient.get<Category>(CATEGORY_API.detail(id));
-      return res.data;
-    },
-    enabled: !!id,
-  });
+  return useApiQuery<Category>(categoryKeys.detail(id), CATEGORY_API.detail(id), { enabled: !!id });
 }
-
-/* =========================================================
-   Create Category
-   ========================================================= */
 
 export function useCreateCategory() {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (body: CategoryFormValues) => {
-      const res = await apiClient.post<Category>(CATEGORY_API.create, body);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: categoryKeys.all });
-      toast.success("Category created successfully.");
-      router.push("/categories");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to create category", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (body: CategoryFormValues) => apiClient.post<Category>(CATEGORY_API.create, body).then((r) => r.data),
+    {
+      invalidateKeys: [categoryKeys.all],
+      successMessage: "Category created successfully.",
+      redirectPath: "/categories",
+      errorMessage: "Failed to create category",
+    }
+  );
 }
-
-/* =========================================================
-   Update Category
-   ========================================================= */
 
 export function useUpdateCategory(id: string) {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (body: CategoryFormValues) => {
-      const res = await apiClient.put<Category>(CATEGORY_API.put(id), body);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: categoryKeys.all });
-      queryClient.invalidateQueries({ queryKey: categoryKeys.detail(id) });
-      toast.success("Category updated successfully.");
-      router.push("/categories");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to update category", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (body: Partial<CategoryFormValues>) => apiClient.put<Category>(CATEGORY_API.put(id), body).then((r) => r.data),
+    {
+      invalidateKeys: [categoryKeys.all, categoryKeys.detail(id)],
+      successMessage: "Category updated successfully.",
+      redirectPath: "/categories",
+      errorMessage: "Failed to update category",
+    }
+  );
 }
 
-/* =========================================================
-   Delete Category
-   ========================================================= */
-
 export function useDeleteCategory() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (id: string) => {
-      await apiClient.delete(CATEGORY_API.delete(id));
-      return id;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: categoryKeys.all });
-      toast.success("Category deleted.");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to delete category", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (id: string) => apiClient.delete(CATEGORY_API.delete(id)).then(() => id),
+    {
+      invalidateKeys: [categoryKeys.all],
+      successMessage: "Category deleted.",
+      errorMessage: "Failed to delete category",
+    }
+  );
 }

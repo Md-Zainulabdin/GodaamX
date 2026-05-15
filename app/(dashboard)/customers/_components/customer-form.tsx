@@ -10,6 +10,8 @@ import {
   useCustomer,
 } from "@/app/(dashboard)/customers/_hook/use-customers";
 
+import { FormSkeleton } from "@/components/forms/form-skeleton";
+
 type Props = { mode: "create" } | { mode: "edit"; id: string };
 
 export function CustomerForm(props: Props) {
@@ -29,17 +31,21 @@ export function CustomerForm(props: Props) {
           email: customer.email ?? "",
           phone: customer.phone ?? "",
           address: customer.address ?? "",
-          customer_type: customer.customer_type as any,
+          customer_type: customer.customer_type as CustomerFormValues["customer_type"],
         }
         : undefined,
     [isEdit, customer]
   );
 
   function handleSubmit(data: CustomerFormValues) {
-    isEdit ? updateCustomer(data) : createCustomer(data);
+    if (isEdit) {
+      updateCustomer(data);
+    } else {
+      createCustomer(data);
+    }
   }
 
-  if (isEdit && isLoading) return <p className="text-muted-foreground">Loading...</p>;
+  if (isEdit && isLoading) return <FormSkeleton fieldCount={6} />;
   if (isEdit && !customer) return <p className="text-muted-foreground">Customer not found.</p>;
 
   return (

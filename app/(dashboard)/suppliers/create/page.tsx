@@ -1,44 +1,20 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-
 import { SupplierForm } from "../_components/supplier-form";
+import { PageHeader } from "@/components/layout/page-header";
 
-const CreateSuppliersPage = () => {
+export default function CreateSupplierPage() {
   return (
-    <div>
-      {/* Breadcrumb */}
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">GodaamX</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/suppliers">Suppliers</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">Create</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+    <div className="space-y-6">
+      <PageHeader 
+        title="Add New Supplier" 
+        breadcrumbs={[
+          { label: "Suppliers", href: "/suppliers" },
+          { label: "Create" }
+        ]}
+      />
 
-      {/* Page Title */}
-      <div className="my-8 w-full">
-        <h1 className="text-2xl font-semibold tracking-tight">Create Supplier</h1>
-      </div>
-
-      {/* Supplier Form */}
-      <div>
+      <div className="max-w-2xl">
         <SupplierForm mode="create" />
       </div>
     </div>
   );
-};
-
-export default CreateSuppliersPage;
+}

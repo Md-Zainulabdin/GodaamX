@@ -1,11 +1,8 @@
-/* =========================================================
-   Axios Configuration
-   ========================================================= */
-
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig, AxiosRequestHeaders } from "axios";
 
 import { API_BASE_URL } from "@/constants/api.constants";
 import { getSession, clearSession } from "@/lib/auth";
+import { getCachedToken, setCachedToken } from "@/lib/token-cache";
 
 /* =========================================================
    API Error Type
@@ -33,22 +30,31 @@ export const apiClient = axios.create({
    REQUEST INTERCEPTOR
    ---------------------------------------------------------
    - Attaches auth token (JWT)
-   - Can be extended for multi-tenant headers
+   - Uses client-side cache to avoid redundant Server Action calls
    ========================================================= */
 
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    const session = await getSession();
+    let token = getCachedToken();
 
-    if (session?.token) {
+    // If no cached token, try to get it from the session (Server Action)
+    if (!token) {
+      const session = await getSession();
+      if (session?.token) {
+        token = session.token;
+        setCachedToken(token);
+      }
+    }
+
+    if (token) {
       const headers = (config.headers as AxiosRequestHeaders) ?? {};
-      headers["Authorization"] = `Bearer ${session.token}`;
+      headers["Authorization"] = `Bearer ${token}`;
       config.headers = headers;
     }
 
     // Dev-only logging
     if (process.env.NODE_ENV === "development") {
-      console.log(`[API REQUEST] ${config.method?.toUpperCase()} ${config.url}`);
+      // removed development console log
     }
 
     return config;
@@ -61,7 +67,7 @@ apiClient.interceptors.request.use(
    ---------------------------------------------------------
    - Handles API errors consistently
    - Auto logout on 401 (unauthorized)
-   - Central place for toast notifications
+   - Central place for error normalization
    ========================================================= */
 
 apiClient.interceptors.response.use(
@@ -73,6 +79,7 @@ apiClient.interceptors.response.use(
 
     // Unauthorized → force logout
     if (status === 401) {
+      setCachedToken(null);
       await clearSession();
       if (typeof window !== "undefined" && window.location.pathname !== "/login") {
         window.location.href = "/login";
@@ -82,11 +89,6 @@ apiClient.interceptors.response.use(
     // Forbidden → permission issue
     if (status === 403) {
       console.error("Access denied: insufficient permissions.");
-    }
-
-    // Server error
-    if (status && status >= 500) {
-      console.error("Server error. Please try again later.");
     }
 
     const message =

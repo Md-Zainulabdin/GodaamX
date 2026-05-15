@@ -15,6 +15,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { usePurchaseOrders } from "@/app/(dashboard)/purchase-orders/_hook/use-purchase-orders";
 
 import { POITable } from "./_components/poi-table";
+import { ExportButton } from "@/components/tables/export-button";
+import { REPORT_API } from "@/constants/api.constants";
 
 const POIPage = () => {
   const pathname = usePathname();
@@ -72,15 +74,18 @@ const POIPage = () => {
         </div>
 
 
-        <Button
-          asChild
-          disabled={!selectedPoId}
-          className="h-11 px-6 shadow-lg shadow-black/5"
-        >
-          <Link href={`/purchase-order-items/create?po_id=${selectedPoId}`}>
-            Add Item
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            asChild
+            disabled={!selectedPoId}
+            className="h-11 px-6 shadow-lg shadow-black/5"
+          >
+            <Link href={`/purchase-order-items/create?po_id=${selectedPoId}`}>
+              Add Item
+            </Link>
+          </Button>
+          <ExportButton endpoint={REPORT_API.poi} filename="purchase_order_items.csv" />
+        </div>
       </div>
 
       {/* Content Section */}

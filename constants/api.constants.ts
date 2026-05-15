@@ -219,3 +219,22 @@ export const SPEECH_API = {
 export const DASHBOARD_API = {
    get: api("/dashboard"),
 };
+
+/* =========================================================
+   REPORTS
+   ========================================================= */
+
+export const REPORT_API = {
+   users: api("/reports/users/export/csv"),
+   inventory: api("/reports/inventory/export/csv"),
+   purchaseOrders: api("/reports/purchase-orders/export/csv"),
+   categories: api("/reports/categories/export/csv"),
+   products: api("/reports/products/export/csv"),
+   poi: api("/reports/purchase-order-items/export/csv"),
+   invoices: api("/reports/invoices/export/csv"),
+   invoiceItems: api("/reports/invoice-items/export/csv"),
+   shipments: api("/reports/shipments/export/csv"),
+   suppliers: api("/reports/suppliers/export/csv"),
+   customers: api("/reports/customers/export/csv"),
+   warehouses: api("/reports/warehouses/export/csv"),
+};

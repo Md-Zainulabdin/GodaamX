@@ -6,6 +6,8 @@ import { SUPPLIER_FORM_FIELDS } from "@/constants/form.constants";
 import { supplierSchema, SupplierFormValues } from "@/schemas/schemas";
 import { useCreateSupplier, useUpdateSupplier, useSupplier } from "@/app/(dashboard)/suppliers/_hook/use-suppliers";
 
+import { FormSkeleton } from "@/components/forms/form-skeleton";
+
 type Props = { mode: "create" } | { mode: "edit"; id: string };
 
 export function SupplierForm(props: Props) {
@@ -27,14 +29,18 @@ export function SupplierForm(props: Props) {
             status: supplier.status as "Active" | "Inactive",
           }
         : undefined,
-    [isEdit, supplier?.supplier_id, supplier?.supplier_name, supplier?.contact_email, supplier?.contact_phone, supplier?.address, supplier?.status]
+    [isEdit, supplier]
   );
 
   function handleSubmit(data: SupplierFormValues) {
-    isEdit ? updateSupplier(data) : createSupplier(data);
+    if (isEdit) {
+      updateSupplier(data);
+    } else {
+      createSupplier(data);
+    }
   }
 
-  if (isEdit && isLoading) return <p className="text-muted-foreground">Loading...</p>;
+  if (isEdit && isLoading) return <FormSkeleton fieldCount={5} />;
   if (isEdit && !supplier) return <p className="text-muted-foreground">Supplier not found.</p>;
 
   return (

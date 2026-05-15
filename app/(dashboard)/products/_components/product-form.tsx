@@ -8,6 +8,8 @@ import { useCreateProduct, useUpdateProduct, useProduct } from "@/app/(dashboard
 import { useCategories } from "@/app/(dashboard)/categories/_hook/use-categories";
 import { useSuppliers } from "@/app/(dashboard)/suppliers/_hook/use-suppliers";
 
+import { FormSkeleton } from "@/components/forms/form-skeleton";
+
 type Props = { mode: "create" } | { mode: "edit"; id: string };
 
 export function ProductForm(props: Props) {
@@ -47,26 +49,18 @@ export function ProductForm(props: Props) {
             status: product.status as "Active" | "Inactive",
           }
         : undefined,
-    [
-      isEdit,
-      product?.product_id,
-      product?.product_name,
-      product?.sku,
-      product?.description,
-      product?.category_id,
-      product?.supplier_id,
-      product?.price,
-      product?.cost_price,
-      product?.weight,
-      product?.status,
-    ]
+    [isEdit, product]
   );
 
   function handleSubmit(data: ProductFormValues) {
-    isEdit ? updateProduct(data) : createProduct(data);
+    if (isEdit) {
+      updateProduct(data);
+    } else {
+      createProduct(data);
+    }
   }
 
-  if (isEdit && isLoading) return <p className="text-muted-foreground">Loading...</p>;
+  if (isEdit && isLoading) return <FormSkeleton fieldCount={9} />;
   if (isEdit && !product) return <p className="text-muted-foreground">Product not found.</p>;
 
   return (

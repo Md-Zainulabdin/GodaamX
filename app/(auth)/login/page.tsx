@@ -30,18 +30,17 @@ export default function Login() {
 
     try {
       const res = await apiClient.post(AUTH_API.login, payload);
-
-      save(res?.data?.access_token, res?.data?.user);
-      toast("You have signed in successfully.");
-    } catch (err: any) {
-      const message = err?.message || "Login failed. Please try again.";
+      await save(res?.data?.access_token, res?.data?.user);
+      toast.success("You have signed in successfully.");
+    } catch (err: unknown) {
+      const message = (err as { message?: string })?.message || "Login failed. Please try again.";
       toast.error(message);
     }
   }
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <Card>
+    <div className="w-full max-w-md mx-auto animate-fade-in-up opacity-0">
+      <Card className="border-none shadow-none sm:border sm:shadow-sm">
         <CardHeader className="text-center">
           <CardTitle className="text-xl tracking-tight">Welcome back</CardTitle>
           <CardDescription>Enter your credentials to access your account.</CardDescription>

@@ -15,6 +15,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useInvoices } from "@/app/(dashboard)/invoices/_hook/use-invoices";
 
 import { InvoiceItemTable } from "./_components/invoice-item-table";
+import { ExportButton } from "@/components/tables/export-button";
+import { REPORT_API } from "@/constants/api.constants";
 
 const InvoiceItemsPage = () => {
   const pathname = usePathname();
@@ -70,15 +72,18 @@ const InvoiceItemsPage = () => {
           </div>
         </div>
 
-        <Button
-          asChild
-          disabled={!selectedInvoiceId}
-          className="h-11 px-6 shadow-lg shadow-black/5"
-        >
-          <Link href={`/invoice-items/create?invoice_id=${selectedInvoiceId}`}>
-            Add Item
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            asChild
+            disabled={!selectedInvoiceId}
+            className="h-11 px-6 shadow-lg shadow-black/5"
+          >
+            <Link href={`/invoice-items/create?invoice_id=${selectedInvoiceId}`}>
+              Add Item
+            </Link>
+          </Button>
+          <ExportButton endpoint={REPORT_API.invoiceItems} filename="invoice_items.csv" />
+        </div>
       </div>
 
       {/* Content Section */}

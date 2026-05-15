@@ -1,9 +1,10 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
-import { useForm, Controller, DefaultValues, FieldValues, SubmitHandler } from "react-hook-form";
+import { useForm, Controller, DefaultValues, FieldValues, SubmitHandler, Path } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef } from "react";
+import { ZodType } from "zod";
 
 import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -15,8 +16,7 @@ import { DatePicker } from "@/components/ui/date-picker";
 import type { FormField } from "@/constants/form.constants";
 
 type Props<T extends FieldValues> = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  schema: any;
+  schema: ZodType<T, any, any>;
   fields: FormField[];
   onSubmit: SubmitHandler<T>;
   defaultValues?: DefaultValues<T>;
@@ -49,7 +49,7 @@ export function DynamicForm<T extends FieldValues>({
         form.reset(defaultValues);
       }
     }
-  }, [defaultValues, form.reset]);
+  }, [defaultValues, form]);
 
   return (
     <div className="w-full max-w-md">
@@ -58,8 +58,9 @@ export function DynamicForm<T extends FieldValues>({
           {fields.map((field) => {
             if (field.hidden) return null;
 
-            const error = form.formState.errors[field.name];
+            const error = form.formState.errors[field.name as keyof T];
             const options = dynamicOptions?.[field.name] ?? field.options ?? [];
+            const fieldName = field.name as Path<T>;
 
             return (
               <Field key={field.name}>
@@ -72,14 +73,14 @@ export function DynamicForm<T extends FieldValues>({
                   <Textarea
                     id={field.name}
                     placeholder={field.placeholder ?? `Enter ${field.label.toLowerCase()}`}
-                    {...form.register(field.name as Parameters<typeof form.register>[0])}
+                    {...form.register(fieldName)}
                   />
                 )}
 
                 {field.type === "select" && (
                   <Controller
                     control={form.control}
-                    name={field.name as Parameters<typeof form.register>[0]}
+                    name={fieldName}
                     render={({ field: f }) => (
                       <Select value={f.value ?? ""} onValueChange={f.onChange}>
                         <SelectTrigger id={field.name}>
@@ -103,11 +104,11 @@ export function DynamicForm<T extends FieldValues>({
                     type="number"
                     step="any"
                     placeholder={field.placeholder ?? `Enter ${field.label.toLowerCase()}`}
-                    {...form.register(field.name as Parameters<typeof form.register>[0], {
+                    {...form.register(fieldName, {
                       setValueAs: (value) => {
                         if (value === "" || value === null || value === undefined) return undefined;
                         const num = Number(value);
-                        return isNaN(num) ? value : num; // Pass through if not a number so Zod can show type error
+                        return isNaN(num) ? value : num;
                       },
                     })}
                   />
@@ -116,7 +117,7 @@ export function DynamicForm<T extends FieldValues>({
                 {field.type === "date" && (
                   <Controller
                     control={form.control}
-                    name={field.name as Parameters<typeof form.register>[0]}
+                    name={fieldName}
                     render={({ field: f }) => (
                       <DatePicker
                         value={f.value}
@@ -132,7 +133,7 @@ export function DynamicForm<T extends FieldValues>({
                     id={field.name}
                     type={field.type ?? "text"}
                     placeholder={field.placeholder ?? `Enter ${field.label.toLowerCase()}`}
-                    {...form.register(field.name as Parameters<typeof form.register>[0])}
+                    {...form.register(fieldName)}
                   />
                 )}
 

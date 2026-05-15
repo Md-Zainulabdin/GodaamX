@@ -13,6 +13,8 @@ import { useProducts } from "@/app/(dashboard)/products/_hook/use-products";
 import { useWarehouses } from "@/app/(dashboard)/warehouses/_hook/use-warehouses";
 import { format } from "date-fns";
 
+import { FormSkeleton } from "@/components/forms/form-skeleton";
+
 type Props = { mode: "create" } | { mode: "edit"; id: string };
 
 export function InventoryForm(props: Props) {
@@ -46,14 +48,18 @@ export function InventoryForm(props: Props) {
         last_restocked: today,
       };
     },
-    [isEdit, inventory?.inventory_id, inventory?.product_id, inventory?.warehouse_id, inventory?.quantity, inventory?.reorder_level, inventory?.last_restocked]
+    [isEdit, inventory]
   );
 
   function handleSubmit(data: InventoryFormValues) {
-    isEdit ? updateInventory(data) : createInventory(data);
+    if (isEdit) {
+      updateInventory(data);
+    } else {
+      createInventory(data);
+    }
   }
 
-  if (isEdit && isLoading) return <p className="text-muted-foreground">Loading...</p>;
+  if (isEdit && isLoading) return <FormSkeleton fieldCount={5} />;
   if (isEdit && !inventory) return <p className="text-muted-foreground">Inventory record not found.</p>;
 
   return (

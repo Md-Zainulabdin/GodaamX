@@ -12,6 +12,8 @@ import {
 import { useSuppliers } from "@/app/(dashboard)/suppliers/_hook/use-suppliers";
 import { usePurchaseOrders } from "@/app/(dashboard)/purchase-orders/_hook/use-purchase-orders";
 
+import { FormSkeleton } from "@/components/forms/form-skeleton";
+
 type Props = { mode: "create" } | { mode: "edit"; id: string };
 
 export function InvoiceForm(props: Props) {
@@ -41,17 +43,21 @@ export function InvoiceForm(props: Props) {
             invoice_number: invoice.invoice_number ?? "",
             invoice_date: invoice.invoice_date ? new Date(invoice.invoice_date).toISOString().split("T")[0] : "",
             total_amount: invoice.total_amount ? Number(invoice.total_amount) : null,
-            status: invoice.status as any,
+            status: invoice.status as InvoiceFormValues["status"],
           }
         : undefined,
-    [isEdit, invoice?.invoice_id, invoice?.supplier_id, invoice?.po_id, invoice?.invoice_number, invoice?.invoice_date, invoice?.total_amount, invoice?.status]
+    [isEdit, invoice]
   );
 
   function handleSubmit(data: InvoiceFormValues) {
-    isEdit ? updateInvoice(data) : createInvoice(data);
+    if (isEdit) {
+      updateInvoice(data);
+    } else {
+      createInvoice(data);
+    }
   }
 
-  if (isEdit && isLoading) return <p className="text-muted-foreground">Loading...</p>;
+  if (isEdit && isLoading) return <FormSkeleton fieldCount={6} />;
   if (isEdit && !invoice) return <p className="text-muted-foreground">Invoice not found.</p>;
 
   return (

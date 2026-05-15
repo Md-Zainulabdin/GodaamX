@@ -12,6 +12,8 @@ import {
 import { usePurchaseOrders } from "@/app/(dashboard)/purchase-orders/_hook/use-purchase-orders";
 import { useProducts } from "@/app/(dashboard)/products/_hook/use-products";
 
+import { FormSkeleton } from "@/components/forms/form-skeleton";
+
 type Props = { mode: "create"; poId?: string } | { mode: "edit"; id: string; poId: string };
 
 export function POIForm(props: Props) {
@@ -44,15 +46,19 @@ export function POIForm(props: Props) {
           quantity: Number(item.quantity),
           price: Number(item.price),
         }
-        : poId ? { po_id: poId } as any : undefined,
+        : poId ? ({ po_id: poId } as unknown as Partial<PurchaseOrderItemFormValues>) : undefined,
     [isEdit, item, poId]
   );
 
   function handleSubmit(data: PurchaseOrderItemFormValues) {
-    isEdit ? updatePOI(data) : createPOI(data);
+    if (isEdit) {
+      updatePOI(data);
+    } else {
+      createPOI(data);
+    }
   }
 
-  if (isEdit && isLoading) return <p className="text-muted-foreground">Loading...</p>;
+  if (isEdit && isLoading) return <FormSkeleton fieldCount={4} />;
   if (isEdit && !item) return <p className="text-muted-foreground">Item not found.</p>;
 
   return (

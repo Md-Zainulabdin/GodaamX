@@ -1,44 +1,20 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-
 import { InvoiceForm } from "../_components/invoice-form";
+import { PageHeader } from "@/components/layout/page-header";
 
-const CreateInvoicePage = () => {
+export default function CreateInvoicePage() {
   return (
-    <div>
-      {/* Breadcrumb */}
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">GodaamX</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/invoices">Invoices</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">Create</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+    <div className="space-y-6">
+      <PageHeader 
+        title="Create New Invoice" 
+        breadcrumbs={[
+          { label: "Invoices", href: "/invoices" },
+          { label: "Create" }
+        ]}
+      />
 
-      {/* Page Title */}
-      <div className="my-8 w-full">
-        <h1 className="text-2xl font-semibold tracking-tight">Create Invoice</h1>
-      </div>
-
-      {/* Invoice Form */}
-      <div>
+      <div className="max-w-2xl">
         <InvoiceForm mode="create" />
       </div>
     </div>
   );
-};
-
-export default CreateInvoicePage;
+}

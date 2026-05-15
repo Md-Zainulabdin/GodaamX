@@ -12,6 +12,8 @@ import {
 import { usePurchaseOrders } from "@/app/(dashboard)/purchase-orders/_hook/use-purchase-orders";
 import { useWarehouses } from "@/app/(dashboard)/warehouses/_hook/use-warehouses";
 
+import { FormSkeleton } from "@/components/forms/form-skeleton";
+
 type Props = { mode: "create" } | { mode: "edit"; id: string };
 
 export function ShipmentForm(props: Props) {
@@ -44,18 +46,22 @@ export function ShipmentForm(props: Props) {
           estimated_arrival: shipment.estimated_arrival ? new Date(shipment.estimated_arrival).toISOString().split("T")[0] : "",
           actual_arrival: shipment.actual_arrival ? new Date(shipment.actual_arrival).toISOString().split("T")[0] : "",
           warehouse_id: shipment.warehouse_id ?? null,
-          status: shipment.status as any,
+          status: shipment.status as ShipmentFormValues["status"],
           notes: shipment.notes ?? "",
         }
         : undefined,
-    [isEdit, shipment?.shipment_id, shipment?.po_id, shipment?.warehouse_id, shipment?.status]
+    [isEdit, shipment]
   );
 
   function handleSubmit(data: ShipmentFormValues) {
-    isEdit ? updateShipment(data) : createShipment(data);
+    if (isEdit) {
+      updateShipment(data);
+    } else {
+      createShipment(data);
+    }
   }
 
-  if (isEdit && isLoading) return <p className="text-muted-foreground">Loading...</p>;
+  if (isEdit && isLoading) return <FormSkeleton fieldCount={8} />;
   if (isEdit && !shipment) return <p className="text-muted-foreground">Shipment not found.</p>;
 
   return (

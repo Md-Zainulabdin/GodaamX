@@ -1,43 +1,24 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+"use client";
 
+import { useParams } from "next/navigation";
 import { SupplierForm } from "../../_components/supplier-form";
+import { PageHeader } from "@/components/layout/page-header";
 
-export default async function UpdateSupplierPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export default function UpdateSupplierPage() {
+  const { id } = useParams();
 
   return (
-    <div>
-      {/* Breadcrumb */}
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">GodaamX</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/suppliers">Suppliers</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">Update</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+    <div className="space-y-6">
+      <PageHeader 
+        title="Update Supplier Information" 
+        breadcrumbs={[
+          { label: "Suppliers", href: "/suppliers" },
+          { label: "Update" }
+        ]}
+      />
 
-      {/* Page Title */}
-      <div className="my-8 w-full">
-        <h1 className="text-2xl font-semibold tracking-tight">Update Supplier</h1>
-      </div>
-
-      {/* Supplier Form */}
-      <div>
-        <SupplierForm mode="edit" id={id} />
+      <div className="max-w-2xl">
+        <SupplierForm mode="edit" id={id as string} />
       </div>
     </div>
   );

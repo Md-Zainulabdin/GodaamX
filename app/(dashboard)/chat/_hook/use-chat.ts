@@ -33,8 +33,8 @@ export function useChat(initialConversationId: string | null = null) {
       }
 
       return response.data;
-    } catch (error: any) {
-      const message = error?.message ?? "Failed to send message";
+    } catch (error: unknown) {
+      const message = (error as { message?: string })?.message ?? "Failed to send message";
       toast.error(message);
       throw error;
     } finally {

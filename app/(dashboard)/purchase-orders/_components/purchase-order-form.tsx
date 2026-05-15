@@ -12,6 +12,8 @@ import {
 import { useSuppliers } from "@/app/(dashboard)/suppliers/_hook/use-suppliers";
 import { useWarehouses } from "@/app/(dashboard)/warehouses/_hook/use-warehouses";
 
+import { FormSkeleton } from "@/components/forms/form-skeleton";
+
 type Props = { mode: "create" } | { mode: "edit"; id: string };
 
 export function PurchaseOrderForm(props: Props) {
@@ -39,17 +41,21 @@ export function PurchaseOrderForm(props: Props) {
             order_date: purchaseOrder.order_date ? new Date(purchaseOrder.order_date).toISOString().split("T")[0] : "",
             expected_delivery: purchaseOrder.expected_delivery ? new Date(purchaseOrder.expected_delivery).toISOString().split("T")[0] : "",
             total_amount: purchaseOrder.total_amount ? Number(purchaseOrder.total_amount) : null,
-            status: purchaseOrder.status as any,
+            status: purchaseOrder.status as PurchaseOrderFormValues["status"],
           }
         : undefined,
-    [isEdit, purchaseOrder?.po_id, purchaseOrder?.supplier_id, purchaseOrder?.warehouse_id, purchaseOrder?.order_number, purchaseOrder?.order_date, purchaseOrder?.expected_delivery, purchaseOrder?.total_amount, purchaseOrder?.status]
+    [isEdit, purchaseOrder]
   );
 
   function handleSubmit(data: PurchaseOrderFormValues) {
-    isEdit ? updatePurchaseOrder(data) : createPurchaseOrder(data);
+    if (isEdit) {
+      updatePurchaseOrder(data);
+    } else {
+      createPurchaseOrder(data);
+    }
   }
 
-  if (isEdit && isLoading) return <p className="text-muted-foreground">Loading...</p>;
+  if (isEdit && isLoading) return <FormSkeleton fieldCount={7} />;
   if (isEdit && !purchaseOrder) return <p className="text-muted-foreground">Purchase order not found.</p>;
 
   return (

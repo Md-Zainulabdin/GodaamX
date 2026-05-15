@@ -26,20 +26,18 @@ export default function Register() {
 
   async function onSubmit(data: RegistrationFormValues) {
     try {
-      const res = await apiClient.post(AUTH_API.register, data);
-      if (res) {
-        toast("Registration Successfull.");
-        router.push("/registration-success");
-      }
-    } catch (err: any) {
-      const message = err?.message || "Registration failed. Please try again.";
+      await apiClient.post(AUTH_API.register, data);
+      toast.success("Registration successful.");
+      router.push("/registration-success");
+    } catch (err: unknown) {
+      const message = (err as Error)?.message || "Registration failed. Please try again.";
       toast.error(message);
     }
   }
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <Card>
+    <div className="w-full max-w-md mx-auto animate-fade-in-up opacity-0">
+      <Card className="border-none shadow-none sm:border sm:shadow-sm">
         <CardHeader className="text-center">
           <CardTitle className="text-xl tracking-tight">Registration</CardTitle>
           <CardDescription>Enter your details to complete registration.</CardDescription>

@@ -24,16 +24,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { useDashboard } from "./_hook/use-dashboard";
-
-const formatCurrency = (value: number | string | undefined) => {
-  if (value === undefined) return "—";
-  const num = typeof value === "string" ? parseFloat(value) : value;
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(num);
-};
+import { formatCurrency } from "@/lib/utils";
 
 export default function Dashboard() {
   const { session, logout, loading: authLoading } = useAuth();

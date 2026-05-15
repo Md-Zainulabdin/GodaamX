@@ -7,6 +7,8 @@ import { userSchema, UserFormValues } from "@/schemas/schemas";
 import { useCreateUser, useUpdateUser, useUser } from "@/app/(dashboard)/users/_hook/use-users";
 import { useSuppliers } from "@/app/(dashboard)/suppliers/_hook/use-suppliers";
 
+import { FormSkeleton } from "@/components/forms/form-skeleton";
+
 type Props = { mode: "create" } | { mode: "edit"; id: string };
 
 export function UserForm(props: Props) {
@@ -32,16 +34,20 @@ export function UserForm(props: Props) {
             supplier_id: user.supplier_id ?? null,
           }
         : undefined,
-    [isEdit, user?.user_id, user?.name, user?.email, user?.phone_number, user?.role, user?.supplier_id]
+    [isEdit, user]
   );
 
   const fields = USER_FORM_FIELDS.map((f) => (f.name === "password" ? { ...f, hidden: isEdit } : f));
 
   function handleSubmit(data: UserFormValues) {
-    isEdit ? updateUser(data) : createUser(data);
+    if (isEdit) {
+      updateUser(data);
+    } else {
+      createUser(data);
+    }
   }
 
-  if (isEdit && isLoading) return <p className="text-muted-foreground">Loading...</p>;
+  if (isEdit && isLoading) return <FormSkeleton fieldCount={5} />;
   if (isEdit && !user) return <p className="text-muted-foreground">User not found.</p>;
 
   return (

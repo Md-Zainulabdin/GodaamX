@@ -1,11 +1,8 @@
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { apiClient, type ApiError } from "@/lib/axios";
+import { apiClient } from "@/lib/axios";
 import { Inventory } from "@/types/global";
-
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { INVENTORY_API } from "@/constants/api.constants";
 import { InventoryFormValues } from "@/schemas/schemas";
+import { useApiQuery, useApiMutation } from "@/hooks/use-api-factory";
 
 /* =========================================================
    Inventory Keys
@@ -17,101 +14,48 @@ export const inventoryKeys = {
 };
 
 /* =========================================================
-   Inventory List
+   Inventory Hooks
    ========================================================= */
 
 export function useInventoryList() {
-  return useQuery({
-    queryKey: inventoryKeys.all,
-    queryFn: async () => {
-      const res = await apiClient.get<Inventory[]>(INVENTORY_API.list);
-      return res.data;
-    },
-  });
+  return useApiQuery<Inventory[]>(inventoryKeys.all, INVENTORY_API.list);
 }
-
-/* =========================================================
-   Inventory Detail
-   ========================================================= */
 
 export function useInventory(id: string) {
-  return useQuery({
-    queryKey: inventoryKeys.detail(id),
-    queryFn: async () => {
-      const res = await apiClient.get<Inventory>(INVENTORY_API.detail(id));
-      return res.data;
-    },
-    enabled: !!id,
-  });
+  return useApiQuery<Inventory>(inventoryKeys.detail(id), INVENTORY_API.detail(id), { enabled: !!id });
 }
-
-/* =========================================================
-   Create Inventory
-   ========================================================= */
 
 export function useCreateInventory() {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (body: InventoryFormValues) => {
-      const res = await apiClient.post<Inventory>(INVENTORY_API.create, body);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: inventoryKeys.all });
-      toast.success("Inventory created successfully.");
-      router.push("/inventory");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to create inventory", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (body: InventoryFormValues) => apiClient.post<Inventory>(INVENTORY_API.create, body).then((r) => r.data),
+    {
+      invalidateKeys: [inventoryKeys.all],
+      successMessage: "Inventory created successfully.",
+      redirectPath: "/inventory",
+      errorMessage: "Failed to create inventory",
+    }
+  );
 }
-
-/* =========================================================
-   Update Inventory
-   ========================================================= */
 
 export function useUpdateInventory(id: string) {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (body: InventoryFormValues) => {
-      const res = await apiClient.put<Inventory>(INVENTORY_API.update(id), body);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: inventoryKeys.all });
-      queryClient.invalidateQueries({ queryKey: inventoryKeys.detail(id) });
-      toast.success("Inventory updated successfully.");
-      router.push("/inventory");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to update inventory", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (body: Partial<InventoryFormValues>) => apiClient.put<Inventory>(INVENTORY_API.update(id), body).then((r) => r.data),
+    {
+      invalidateKeys: [inventoryKeys.all, inventoryKeys.detail(id)],
+      successMessage: "Inventory updated successfully.",
+      redirectPath: "/inventory",
+      errorMessage: "Failed to update inventory",
+    }
+  );
 }
 
-/* =========================================================
-   Delete Inventory
-   ========================================================= */
-
 export function useDeleteInventory() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (id: string) => {
-      await apiClient.delete(INVENTORY_API.delete(id));
-      return id;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: inventoryKeys.all });
-      toast.success("Inventory deleted.");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to delete inventory", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (id: string) => apiClient.delete(INVENTORY_API.delete(id)).then(() => id),
+    {
+      invalidateKeys: [inventoryKeys.all],
+      successMessage: "Inventory deleted.",
+      errorMessage: "Failed to delete inventory",
+    }
+  );
 }

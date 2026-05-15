@@ -1,44 +1,20 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-
 import { InventoryForm } from "../_components/inventory-form";
+import { PageHeader } from "@/components/layout/page-header";
 
-const CreateInventoryPage = () => {
+export default function CreateInventoryPage() {
   return (
-    <div>
-      {/* Breadcrumb */}
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">GodaamX</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/inventory">Inventory</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">Create</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+    <div className="space-y-6">
+      <PageHeader 
+        title="Add Stock Item" 
+        breadcrumbs={[
+          { label: "Inventory", href: "/inventory" },
+          { label: "Create" }
+        ]}
+      />
 
-      {/* Page Title */}
-      <div className="my-8 w-full">
-        <h1 className="text-2xl font-semibold tracking-tight">Create Inventory</h1>
-      </div>
-
-      {/* Inventory Form */}
-      <div>
+      <div className="max-w-2xl">
         <InventoryForm mode="create" />
       </div>
     </div>
   );
-};
-
-export default CreateInventoryPage;
+}

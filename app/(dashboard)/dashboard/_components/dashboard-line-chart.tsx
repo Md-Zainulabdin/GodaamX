@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 interface DashboardLineChartProps {
   title: string;
   description?: string;
-  data: any[];
+  data: Record<string, string | number>[];
   xKey: string;
   yKey: string;
   yLabel?: string;
@@ -57,7 +57,7 @@ export function DashboardLineChart({
             />
             <Tooltip
               contentStyle={{ backgroundColor: "#fff", borderRadius: "8px", border: "1px solid #e2e8f0" }}
-              formatter={(value: any) => [`${yLabel || ""}${value}`, yKey]}
+              formatter={(value: number | string) => [`${yLabel || ""}${value}`, yKey]}
             />
             <Line
               type="monotone"

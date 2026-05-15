@@ -10,6 +10,8 @@ import {
   useWarehouse,
 } from "@/app/(dashboard)/warehouses/_hook/use-warehouses";
 
+import { FormSkeleton } from "@/components/forms/form-skeleton";
+
 type Props = { mode: "create" } | { mode: "edit"; id: string };
 
 export function WarehouseForm(props: Props) {
@@ -32,7 +34,7 @@ export function WarehouseForm(props: Props) {
           status: (warehouse.is_active ? "Active" : "Inactive") as "Active" | "Inactive",
         }
         : undefined,
-    [isEdit, warehouse?.warehouse_id, warehouse?.warehouse_name, warehouse?.location, warehouse?.city, warehouse?.capacity, warehouse?.phone, warehouse?.is_active]
+    [isEdit, warehouse]
   );
 
   function handleSubmit(data: WarehouseFormValues) {
@@ -43,7 +45,7 @@ export function WarehouseForm(props: Props) {
     isEdit ? updateWarehouse(payload) : createWarehouse(payload);
   }
 
-  if (isEdit && isLoading) return <p className="text-muted-foreground">Loading...</p>;
+  if (isEdit && isLoading) return <FormSkeleton fieldCount={6} />;
   if (isEdit && !warehouse) return <p className="text-muted-foreground">Warehouse not found.</p>;
 
   return (

@@ -1,11 +1,8 @@
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { apiClient, type ApiError } from "@/lib/axios";
+import { apiClient } from "@/lib/axios";
 import { Customer } from "@/types/global";
-
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { CUSTOMER_API } from "@/constants/api.constants";
 import { CustomerFormValues } from "@/schemas/schemas";
+import { useApiQuery, useApiMutation } from "@/hooks/use-api-factory";
 
 /* =========================================================
    Customer Keys
@@ -17,101 +14,48 @@ export const customerKeys = {
 };
 
 /* =========================================================
-   Customer List
+   Customer Hooks
    ========================================================= */
 
 export function useCustomers() {
-  return useQuery({
-    queryKey: customerKeys.all,
-    queryFn: async () => {
-      const res = await apiClient.get<Customer[]>(CUSTOMER_API.list);
-      return res.data;
-    },
-  });
+  return useApiQuery<Customer[]>(customerKeys.all, CUSTOMER_API.list);
 }
-
-/* =========================================================
-   Customer Detail
-   ========================================================= */
 
 export function useCustomer(id: string) {
-  return useQuery({
-    queryKey: customerKeys.detail(id),
-    queryFn: async () => {
-      const res = await apiClient.get<Customer>(CUSTOMER_API.detail(id));
-      return res.data;
-    },
-    enabled: !!id,
-  });
+  return useApiQuery<Customer>(customerKeys.detail(id), CUSTOMER_API.detail(id), { enabled: !!id });
 }
-
-/* =========================================================
-   Create Customer
-   ========================================================= */
 
 export function useCreateCustomer() {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (body: CustomerFormValues) => {
-      const res = await apiClient.post<Customer>(CUSTOMER_API.create, body);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: customerKeys.all });
-      toast.success("Customer created successfully.");
-      router.push("/customers");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to create customer", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (body: CustomerFormValues) => apiClient.post<Customer>(CUSTOMER_API.create, body).then((r) => r.data),
+    {
+      invalidateKeys: [customerKeys.all],
+      successMessage: "Customer created successfully.",
+      redirectPath: "/customers",
+      errorMessage: "Failed to create customer",
+    }
+  );
 }
-
-/* =========================================================
-   Update Customer
-   ========================================================= */
 
 export function useUpdateCustomer(id: string) {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (body: CustomerFormValues) => {
-      const res = await apiClient.put<Customer>(CUSTOMER_API.update(id), body);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: customerKeys.all });
-      queryClient.invalidateQueries({ queryKey: customerKeys.detail(id) });
-      toast.success("Customer updated successfully.");
-      router.push("/customers");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to update customer", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (body: Partial<CustomerFormValues>) => apiClient.put<Customer>(CUSTOMER_API.update(id), body).then((r) => r.data),
+    {
+      invalidateKeys: [customerKeys.all, customerKeys.detail(id)],
+      successMessage: "Customer updated successfully.",
+      redirectPath: "/customers",
+      errorMessage: "Failed to update customer",
+    }
+  );
 }
 
-/* =========================================================
-   Delete Customer
-   ========================================================= */
-
 export function useDeleteCustomer() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (id: string) => {
-      await apiClient.delete(CUSTOMER_API.delete(id));
-      return id;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: customerKeys.all });
-      toast.success("Customer deleted.");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to delete customer", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (id: string) => apiClient.delete(CUSTOMER_API.delete(id)).then(() => id),
+    {
+      invalidateKeys: [customerKeys.all],
+      successMessage: "Customer deleted.",
+      errorMessage: "Failed to delete customer",
+    }
+  );
 }

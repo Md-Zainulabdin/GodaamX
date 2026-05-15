@@ -1,44 +1,20 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-
 import { ShipmentForm } from "../_components/shipment-form";
+import { PageHeader } from "@/components/layout/page-header";
 
-const CreateShipmentPage = () => {
+export default function CreateShipmentPage() {
   return (
-    <div>
-      {/* Breadcrumb */}
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">GodaamX</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/shipments">Shipments</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">Create</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+    <div className="space-y-6">
+      <PageHeader 
+        title="Schedule New Shipment" 
+        breadcrumbs={[
+          { label: "Shipments", href: "/shipments" },
+          { label: "Create" }
+        ]}
+      />
 
-      {/* Page Title */}
-      <div className="my-8 w-full">
-        <h1 className="text-2xl font-semibold tracking-tight">Create Shipment</h1>
-      </div>
-
-      {/* Shipment Form */}
-      <div>
+      <div className="max-w-2xl">
         <ShipmentForm mode="create" />
       </div>
     </div>
   );
-};
-
-export default CreateShipmentPage;
+}

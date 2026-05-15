@@ -11,6 +11,8 @@ import {
   useCategories,
 } from "@/app/(dashboard)/categories/_hook/use-categories";
 
+import { FormSkeleton } from "@/components/forms/form-skeleton";
+
 type Props = { mode: "create" } | { mode: "edit"; id: string };
 
 export function CategoryForm(props: Props) {
@@ -36,14 +38,18 @@ export function CategoryForm(props: Props) {
             parent_category_id: category.parent_category_id ?? null,
           }
         : undefined,
-    [isEdit, category?.category_id, category?.category_name, category?.description, category?.parent_category_id]
+    [isEdit, category]
   );
 
   function handleSubmit(data: CategoryFormValues) {
-    isEdit ? updateCategory(data) : createCategory(data);
+    if (isEdit) {
+      updateCategory(data);
+    } else {
+      createCategory(data);
+    }
   }
 
-  if (isEdit && isLoading) return <p className="text-muted-foreground">Loading...</p>;
+  if (isEdit && isLoading) return <FormSkeleton fieldCount={3} />;
   if (isEdit && !category) return <p className="text-muted-foreground">Category not found.</p>;
 
   return (

@@ -1,45 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { PAGE_TITLES } from "@/constants/constants";
-
 import { SupplierTable } from "./_components/supplier-table";
+import { ExportButton } from "@/components/tables/export-button";
+import { REPORT_API } from "@/constants/api.constants";
+import { PageHeader } from "@/components/layout/page-header";
 
 const SuppliersPage = () => {
-  const pathname = usePathname();
-
   return (
-    <div>
-      {/* Breadcrumb */}
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">GodaamX</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">Suppliers</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
-      {/* Page Title */}
-      <div className="my-8 flex w-full items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight">{PAGE_TITLES[pathname]}</h1>
-        <Button asChild>
-          <Link href={"/suppliers/create"}>Add Supplier</Link>
-        </Button>
-      </div>
+    <div className="space-y-6">
+      <PageHeader 
+        title="Suppliers Management" 
+        breadcrumbs={[{ label: "Suppliers" }]}
+      >
+        <div className="flex items-center gap-2">
+          <Button asChild>
+            <Link href={"/suppliers/create"}>Add Supplier</Link>
+          </Button>
+          <ExportButton endpoint={REPORT_API.suppliers} filename="suppliers.csv" />
+        </div>
+      </PageHeader>
 
       {/* Suppliers Table */}
       <div>

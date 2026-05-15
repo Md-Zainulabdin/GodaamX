@@ -1,11 +1,8 @@
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { apiClient, type ApiError } from "@/lib/axios";
+import { apiClient } from "@/lib/axios";
 import { Product } from "@/types/global";
-
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { PRODUCT_API } from "@/constants/api.constants";
 import { ProductFormValues } from "@/schemas/schemas";
+import { useApiQuery, useApiMutation } from "@/hooks/use-api-factory";
 
 /* =========================================================
    Products Keys
@@ -17,101 +14,48 @@ export const productKeys = {
 };
 
 /* =========================================================
-   List Products
+   Products Hooks
    ========================================================= */
 
 export function useProducts() {
-  return useQuery({
-    queryKey: productKeys.all,
-    queryFn: async () => {
-      const res = await apiClient.get<Product[]>(PRODUCT_API.list);
-      return res.data;
-    },
-  });
+  return useApiQuery<Product[]>(productKeys.all, PRODUCT_API.list);
 }
-
-/* =========================================================
-   Product Detail
-   ========================================================= */
 
 export function useProduct(id: string) {
-  return useQuery({
-    queryKey: productKeys.detail(id),
-    queryFn: async () => {
-      const res = await apiClient.get<Product>(PRODUCT_API.detail(id));
-      return res.data;
-    },
-    enabled: !!id,
-  });
+  return useApiQuery<Product>(productKeys.detail(id), PRODUCT_API.detail(id), { enabled: !!id });
 }
-
-/* =========================================================
-   Create Product
-   ========================================================= */
 
 export function useCreateProduct() {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (body: ProductFormValues) => {
-      const res = await apiClient.post<Product>(PRODUCT_API.create, body);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: productKeys.all });
-      toast.success("Product created successfully.");
-      router.push("/products");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to create product", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (body: ProductFormValues) => apiClient.post<Product>(PRODUCT_API.create, body).then((r) => r.data),
+    {
+      invalidateKeys: [productKeys.all],
+      successMessage: "Product created successfully.",
+      redirectPath: "/products",
+      errorMessage: "Failed to create product",
+    }
+  );
 }
-
-/* =========================================================
-   Update Product
-   ========================================================= */
 
 export function useUpdateProduct(id: string) {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (body: ProductFormValues) => {
-      const res = await apiClient.put<Product>(PRODUCT_API.put(id), body);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: productKeys.all });
-      queryClient.invalidateQueries({ queryKey: productKeys.detail(id) });
-      toast.success("Product updated successfully.");
-      router.push("/products");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to update product", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (body: Partial<ProductFormValues>) => apiClient.put<Product>(PRODUCT_API.put(id), body).then((r) => r.data),
+    {
+      invalidateKeys: [productKeys.all, productKeys.detail(id)],
+      successMessage: "Product updated successfully.",
+      redirectPath: "/products",
+      errorMessage: "Failed to update product",
+    }
+  );
 }
 
-/* =========================================================
-   Delete Product
-   ========================================================= */
-
 export function useDeleteProduct() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (id: string) => {
-      await apiClient.delete(PRODUCT_API.delete(id));
-      return id;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: productKeys.all });
-      toast.success("Product deleted.");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to delete product", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (id: string) => apiClient.delete(PRODUCT_API.delete(id)).then(() => id),
+    {
+      invalidateKeys: [productKeys.all],
+      successMessage: "Product deleted.",
+      errorMessage: "Failed to delete product",
+    }
+  );
 }

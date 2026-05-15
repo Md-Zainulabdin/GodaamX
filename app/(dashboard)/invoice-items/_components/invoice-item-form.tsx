@@ -12,6 +12,8 @@ import {
 import { useInvoices } from "@/app/(dashboard)/invoices/_hook/use-invoices";
 import { useProducts } from "@/app/(dashboard)/products/_hook/use-products";
 
+import { FormSkeleton } from "@/components/forms/form-skeleton";
+
 type Props = { mode: "create"; invoiceId?: string } | { mode: "edit"; id: string; invoiceId: string };
 
 export function InvoiceItemForm(props: Props) {
@@ -44,15 +46,19 @@ export function InvoiceItemForm(props: Props) {
           quantity: Number(item.quantity),
           price: Number(item.price),
         }
-        : invoiceId ? { invoice_id: invoiceId } as any : undefined,
+        : invoiceId ? ({ invoice_id: invoiceId } as unknown as Partial<InvoiceItemFormValues>) : undefined,
     [isEdit, item, invoiceId]
   );
 
   function handleSubmit(data: InvoiceItemFormValues) {
-    isEdit ? updateItem(data) : createItem(data);
+    if (isEdit) {
+      updateItem(data);
+    } else {
+      createItem(data);
+    }
   }
 
-  if (isEdit && isLoading) return <p className="text-muted-foreground">Loading...</p>;
+  if (isEdit && isLoading) return <FormSkeleton fieldCount={4} />;
   if (isEdit && !item) return <p className="text-muted-foreground">Item not found.</p>;
 
   return (

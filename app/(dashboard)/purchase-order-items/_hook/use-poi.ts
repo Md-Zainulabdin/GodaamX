@@ -1,11 +1,8 @@
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { apiClient, type ApiError } from "@/lib/axios";
+import { apiClient } from "@/lib/axios";
 import { PurchaseOrderItem } from "@/types/global";
-
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { POI_API } from "@/constants/api.constants";
 import { PurchaseOrderItemFormValues } from "@/schemas/schemas";
+import { useApiQuery, useApiMutation } from "@/hooks/use-api-factory";
 
 /* =========================================================
    POI Keys
@@ -17,102 +14,51 @@ export const poiKeys = {
 };
 
 /* =========================================================
-   POI List
+   POI Hooks
    ========================================================= */
 
 export function usePOI(poId: string) {
-  return useQuery({
-    queryKey: poiKeys.all(poId),
-    queryFn: async () => {
-      const res = await apiClient.get<PurchaseOrderItem[]>(POI_API.list(poId));
-      return res.data;
-    },
-    enabled: !!poId,
-  });
+  return useApiQuery<PurchaseOrderItem[]>(poiKeys.all(poId), POI_API.list(poId), { enabled: !!poId });
 }
 
-/* =========================================================
-   POI Detail
-   ========================================================= */
-
 export function usePOIDetail(poId: string, itemId: string) {
-  return useQuery({
-    queryKey: poiKeys.detail(poId, itemId),
-    queryFn: async () => {
-      const res = await apiClient.get<PurchaseOrderItem>(POI_API.detail(poId, itemId));
-      return res.data;
-    },
+  return useApiQuery<PurchaseOrderItem>(poiKeys.detail(poId, itemId), POI_API.detail(poId, itemId), {
     enabled: !!poId && !!itemId,
   });
 }
 
-/* =========================================================
-   Create POI
-   ========================================================= */
-
 export function useCreatePOI(poId: string) {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (body: PurchaseOrderItemFormValues) => {
-      const res = await apiClient.post<PurchaseOrderItem>(POI_API.create(poId), body);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: poiKeys.all(poId) });
-      toast.success("Item added successfully.");
-      router.push("/purchase-order-items");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to add item", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (body: PurchaseOrderItemFormValues) => apiClient.post<PurchaseOrderItem>(POI_API.create(poId), body).then((r) => r.data),
+    {
+      invalidateKeys: [poiKeys.all(poId)],
+      successMessage: "Item added successfully.",
+      redirectPath: "/purchase-order-items",
+      errorMessage: "Failed to add item",
+    }
+  );
 }
-
-/* =========================================================
-   Update POI
-   ========================================================= */
 
 export function useUpdatePOI(poId: string, itemId: string) {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (body: PurchaseOrderItemFormValues) => {
-      const res = await apiClient.put<PurchaseOrderItem>(POI_API.update(poId, itemId), body);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: poiKeys.all(poId) });
-      queryClient.invalidateQueries({ queryKey: poiKeys.detail(poId, itemId) });
-      toast.success("Item updated successfully.");
-      router.push("/purchase-order-items");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to update item", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (body: Partial<PurchaseOrderItemFormValues>) =>
+      apiClient.put<PurchaseOrderItem>(POI_API.update(poId, itemId), body).then((r) => r.data),
+    {
+      invalidateKeys: [poiKeys.all(poId), poiKeys.detail(poId, itemId)],
+      successMessage: "Item updated successfully.",
+      redirectPath: "/purchase-order-items",
+      errorMessage: "Failed to update item",
+    }
+  );
 }
 
-/* =========================================================
-   Delete POI
-   ========================================================= */
-
 export function useDeletePOI(poId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (itemId: string) => {
-      await apiClient.delete(POI_API.delete(poId, itemId));
-      return itemId;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: poiKeys.all(poId) });
-      toast.success("Item removed.");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to remove item", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (itemId: string) => apiClient.delete(POI_API.delete(poId, itemId)).then(() => itemId),
+    {
+      invalidateKeys: [poiKeys.all(poId)],
+      successMessage: "Item removed.",
+      errorMessage: "Failed to remove item",
+    }
+  );
 }

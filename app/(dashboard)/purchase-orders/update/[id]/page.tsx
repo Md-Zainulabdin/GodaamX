@@ -1,43 +1,24 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+"use client";
 
+import { useParams } from "next/navigation";
 import { PurchaseOrderForm } from "../../_components/purchase-order-form";
+import { PageHeader } from "@/components/layout/page-header";
 
-export default async function UpdatePurchaseOrderPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export default function UpdatePurchaseOrderPage() {
+  const { id } = useParams();
 
   return (
-    <div>
-      {/* Breadcrumb */}
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">GodaamX</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/purchase-orders">Purchase Orders</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">Update</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+    <div className="space-y-6">
+      <PageHeader 
+        title="Update Purchase Order" 
+        breadcrumbs={[
+          { label: "Purchase Orders", href: "/purchase-orders" },
+          { label: "Update" }
+        ]}
+      />
 
-      {/* Page Title */}
-      <div className="my-8 w-full">
-        <h1 className="text-2xl font-semibold tracking-tight">Update Purchase Order</h1>
-      </div>
-
-      {/* Purchase Order Form */}
-      <div>
-        <PurchaseOrderForm mode="edit" id={id} />
+      <div className="max-w-2xl">
+        <PurchaseOrderForm mode="edit" id={id as string} />
       </div>
     </div>
   );

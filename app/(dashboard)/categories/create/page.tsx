@@ -1,44 +1,20 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-
 import { CategoryForm } from "../_components/category-form";
+import { PageHeader } from "@/components/layout/page-header";
 
-const CreateCategoriesPage = () => {
+export default function CreateCategoryPage() {
   return (
-    <div>
-      {/* Breadcrumb */}
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">GodaamX</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/categories">Categories</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">Create</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+    <div className="space-y-6">
+      <PageHeader 
+        title="Create New Category" 
+        breadcrumbs={[
+          { label: "Categories", href: "/categories" },
+          { label: "Create" }
+        ]}
+      />
 
-      {/* Page Title */}
-      <div className="my-8 w-full">
-        <h1 className="text-2xl font-semibold tracking-tight">Create Category</h1>
-      </div>
-
-      {/* Category Form */}
-      <div>
+      <div className="max-w-2xl">
         <CategoryForm mode="create" />
       </div>
     </div>
   );
-};
-
-export default CreateCategoriesPage;
+}

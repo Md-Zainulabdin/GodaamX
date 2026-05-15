@@ -1,11 +1,8 @@
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { apiClient, type ApiError } from "@/lib/axios";
+import { apiClient } from "@/lib/axios";
 import { User } from "@/types/global";
-
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { USER_API } from "@/constants/api.constants";
 import { UserFormValues } from "@/schemas/schemas";
+import { useApiQuery, useApiMutation } from "@/hooks/use-api-factory";
 
 /* =========================================================
    Users Key
@@ -17,101 +14,48 @@ export const userKeys = {
 };
 
 /* =========================================================
-   Users List
+   Users Hooks
    ========================================================= */
 
 export function useUsers() {
-  return useQuery({
-    queryKey: userKeys.all,
-    queryFn: async () => {
-      const res = await apiClient.get<User[]>(USER_API.list);
-      return res.data;
-    },
-  });
+  return useApiQuery<User[]>(userKeys.all, USER_API.list);
 }
-
-/* =========================================================
-   User Detail
-   ========================================================= */
 
 export function useUser(id: string) {
-  return useQuery({
-    queryKey: userKeys.detail(id),
-    queryFn: async () => {
-      const res = await apiClient.get<User>(USER_API.detail(id));
-      return res.data;
-    },
-    enabled: !!id,
-  });
+  return useApiQuery<User>(userKeys.detail(id), USER_API.detail(id), { enabled: !!id });
 }
-
-/* =========================================================
-   Create User
-   ========================================================= */
 
 export function useCreateUser() {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (body: UserFormValues) => {
-      const res = await apiClient.post<User>(USER_API.create, body);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: userKeys.all });
-      toast.success("User created successfully.");
-      router.push("/users");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to create user", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (body: UserFormValues) => apiClient.post<User>(USER_API.create, body).then((r) => r.data),
+    {
+      invalidateKeys: [userKeys.all],
+      successMessage: "User created successfully.",
+      redirectPath: "/users",
+      errorMessage: "Failed to create user",
+    }
+  );
 }
-
-/* =========================================================
-   Update User
-   ========================================================= */
 
 export function useUpdateUser(id: string) {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (body: UserFormValues) => {
-      const res = await apiClient.put<User>(USER_API.put(id), body);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: userKeys.all });
-      queryClient.invalidateQueries({ queryKey: userKeys.detail(id) });
-      toast.success("User updated successfully.");
-      router.push("/users");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to update user", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (body: Partial<UserFormValues>) => apiClient.put<User>(USER_API.put(id), body).then((r) => r.data),
+    {
+      invalidateKeys: [userKeys.all, userKeys.detail(id)],
+      successMessage: "User updated successfully.",
+      redirectPath: "/users",
+      errorMessage: "Failed to update user",
+    }
+  );
 }
 
-/* =========================================================
-   Delete User
-   ========================================================= */
-
 export function useDeleteUser() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (id: string) => {
-      await apiClient.delete(USER_API.delete(id));
-      return id;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: userKeys.all });
-      toast.success("User deleted.");
-    },
-    onError: (err: ApiError) => {
-      toast.error("Failed to delete user", { description: err.message });
-    },
-  });
+  return useApiMutation(
+    (id: string) => apiClient.delete(USER_API.delete(id)).then(() => id),
+    {
+      invalidateKeys: [userKeys.all],
+      successMessage: "User deleted.",
+      errorMessage: "Failed to delete user",
+    }
+  );
 }
