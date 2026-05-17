@@ -237,4 +237,5 @@ export const REPORT_API = {
    suppliers: api("/reports/suppliers/export/csv"),
    customers: api("/reports/customers/export/csv"),
    warehouses: api("/reports/warehouses/export/csv"),
+   download: api("/report/download"),
 };

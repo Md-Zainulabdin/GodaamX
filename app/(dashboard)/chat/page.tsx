@@ -62,9 +62,9 @@ export default function ChatPage() {
   const allMessages = [...(historyMessages || []), ...localMessages];
 
   return (
-    <div className="flex h-[calc(100vh-theme(spacing.28))] flex-col space-y-6">
+    <div className="flex h-[calc(100vh-40px)] flex-col">
       <PageHeader
-        title="AI Logistics Assistant"
+        title="GodaamX Assistant"
         breadcrumbs={[
           { label: "Agent", href: "/chat" },
           ...(conversationId ? [{ label: "Chat Session" }] : [])

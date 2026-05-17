@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,6 +12,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { DashboardCard } from "./_components/dashboard-card";
 import { DashboardLineChart } from "./_components/dashboard-line-chart";
 import { DashboardBarChart } from "./_components/dashboard-bar-chart";
+
 import {
   DollarSign,
   ShoppingCart,
@@ -22,9 +22,11 @@ import {
   Package
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-
 import { useDashboard } from "./_hook/use-dashboard";
 import { formatCurrency } from "@/lib/utils";
+
+import { ExportButton } from "@/components/tables/export-button";
+import { REPORT_API } from "@/constants/api.constants";
 
 export default function Dashboard() {
   const { session, logout, loading: authLoading } = useAuth();
@@ -89,9 +91,20 @@ export default function Dashboard() {
         <h1 className="text-2xl font-semibold tracking-tight">
           {role === "SUPERADMIN" ? "Executive Overview" : "Seller Central"}
         </h1>
-        <Button variant="outline" onClick={logout}>
-          Logout
-        </Button>
+        <div className="flex items-center gap-2">
+          <ExportButton
+            endpoint={REPORT_API.download}
+            filename="dashboard_report.pdf"
+            mimeType="application/pdf"
+            variant="default"
+            size="default"
+          >
+            Report
+          </ExportButton>
+          <Button variant="outline" onClick={logout}>
+            Logout
+          </Button>
+        </div>
       </div>
 
       {/* KPI Cards */}
